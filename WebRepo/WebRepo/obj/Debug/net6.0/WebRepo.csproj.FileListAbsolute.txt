@@ -586,3 +586,5 @@ C:\Programming\WebRepo\WebRepo\WebRepo\obj\Debug\net6.0\refint\WebRepo.dll
 C:\Programming\WebRepo\WebRepo\WebRepo\obj\Debug\net6.0\WebRepo.pdb
 C:\Programming\WebRepo\WebRepo\WebRepo\obj\Debug\net6.0\WebRepo.genruntimeconfig.cache
 C:\Programming\WebRepo\WebRepo\WebRepo\obj\Debug\net6.0\ref\WebRepo.dll
+C:\Programming\WebRepo\WebRepo\WebRepo\bin\Debug\net6.0\WebRepo.Infra.dll
+C:\Programming\WebRepo\WebRepo\WebRepo\bin\Debug\net6.0\WebRepo.Infra.pdb

@@ -22,11 +22,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Models\" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\WebRepo.DAL\WebRepo.DAL.csproj" />
+    <ProjectReference Include="..\WebRepo.Infra\WebRepo.Infra.csproj" />
   </ItemGroup>
 
 </Project>

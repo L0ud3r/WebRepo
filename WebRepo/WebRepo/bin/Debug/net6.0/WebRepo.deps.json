@@ -14,7 +14,8 @@
           "Microsoft.EntityFrameworkCore.Tools": "6.0.14",
           "Microsoft.VisualStudio.Web.CodeGeneration.Design": "6.0.12",
           "Swashbuckle.AspNetCore": "6.2.3",
-          "WebRepo.DAL": "1.0.0"
+          "WebRepo.DAL": "1.0.0",
+          "WebRepo.Infra": "1.0.0"
         },
         "runtime": {
           "WebRepo.dll": {}
@@ -2512,6 +2513,15 @@
         "runtime": {
           "WebRepo.DAL.dll": {}
         }
+      },
+      "WebRepo.Infra/1.0.0": {
+        "dependencies": {
+          "Microsoft.EntityFrameworkCore": "7.0.3",
+          "WebRepo.DAL": "1.0.0"
+        },
+        "runtime": {
+          "WebRepo.Infra.dll": {}
+        }
       }
     }
   },
@@ -3859,6 +3869,11 @@
       "hashPath": "system.xml.xdocument.4.3.0.nupkg.sha512"
     },
     "WebRepo.DAL/1.0.0": {
+      "type": "project",
+      "serviceable": false,
+      "sha512": ""
+    },
+    "WebRepo.Infra/1.0.0": {
       "type": "project",
       "serviceable": false,
       "sha512": ""

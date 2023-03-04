@@ -1,7 +1,14 @@
 using Microsoft.EntityFrameworkCore;
 using Newtonsoft.Json;
 using WebRepo.App.Data;
-using WebRepo.DAL;
+using WebRepo.DAL.Entities;
+using WebRepo.Infra;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
+using Newtonsoft.Json.Linq;
+using System.Text;
 
 namespace WebRepo
 {
@@ -14,7 +21,9 @@ namespace WebRepo
 
             /** Adicionar abaixo as Scopes (repositorios) de cada entidade da database **/
 
-
+            builder.Services.AddScoped<IRepository<User>, Repository<User, WebRepoAppContext>>();
+            builder.Services.AddScoped<IRepository<FileCdn>, Repository<FileCdn, WebRepoAppContext>>();
+            builder.Services.AddScoped<IRepository<FileBlob>, Repository<FileBlob, WebRepoAppContext>>();
 
             /**                                                         **/
 

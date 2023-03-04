@@ -22,3 +22,6 @@ C:\Programming\WebRepo\WebRepo\WebRepo.Infra\obj\Debug\net6.0\WebRepo.Infra.dll
 C:\Programming\WebRepo\WebRepo\WebRepo.Infra\obj\Debug\net6.0\refint\WebRepo.Infra.dll
 C:\Programming\WebRepo\WebRepo\WebRepo.Infra\obj\Debug\net6.0\WebRepo.Infra.pdb
 C:\Programming\WebRepo\WebRepo\WebRepo.Infra\obj\Debug\net6.0\ref\WebRepo.Infra.dll
+C:\Programming\WebRepo\WebRepo\WebRepo.Infra\bin\Debug\net6.0\WebRepo.DAL.dll
+C:\Programming\WebRepo\WebRepo\WebRepo.Infra\bin\Debug\net6.0\WebRepo.DAL.pdb
+C:\Programming\WebRepo\WebRepo\WebRepo.Infra\obj\Debug\net6.0\WebRepo.Infra.csproj.CopyComplete

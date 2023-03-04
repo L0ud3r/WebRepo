@@ -3848,6 +3848,20 @@
         "runtime": {
           "bin/placeholder/WebRepo.DAL.dll": {}
         }
+      },
+      "WebRepo.Infra/1.0.0": {
+        "type": "project",
+        "framework": ".NETCoreApp,Version=v6.0",
+        "dependencies": {
+          "Microsoft.EntityFrameworkCore": "7.0.3",
+          "WebRepo.DAL": "1.0.0"
+        },
+        "compile": {
+          "bin/placeholder/WebRepo.Infra.dll": {}
+        },
+        "runtime": {
+          "bin/placeholder/WebRepo.Infra.dll": {}
+        }
       }
     }
   },
@@ -10837,6 +10851,11 @@
       "type": "project",
       "path": "../WebRepo.DAL/WebRepo.DAL.csproj",
       "msbuildProject": "../WebRepo.DAL/WebRepo.DAL.csproj"
+    },
+    "WebRepo.Infra/1.0.0": {
+      "type": "project",
+      "path": "../WebRepo.Infra/WebRepo.Infra.csproj",
+      "msbuildProject": "../WebRepo.Infra/WebRepo.Infra.csproj"
     }
   },
   "projectFileDependencyGroups": {
@@ -10847,7 +10866,8 @@
       "Microsoft.EntityFrameworkCore.Tools >= 6.0.14",
       "Microsoft.VisualStudio.Web.CodeGeneration.Design >= 6.0.12",
       "Swashbuckle.AspNetCore >= 6.2.3",
-      "WebRepo.DAL >= 1.0.0"
+      "WebRepo.DAL >= 1.0.0",
+      "WebRepo.Infra >= 1.0.0"
     ]
   },
   "packageFolders": {
@@ -10885,6 +10905,9 @@
           "projectReferences": {
             "C:\\Programming\\WebRepo\\WebRepo\\WebRepo.DAL\\WebRepo.DAL.csproj": {
               "projectPath": "C:\\Programming\\WebRepo\\WebRepo\\WebRepo.DAL\\WebRepo.DAL.csproj"
+            },
+            "C:\\Programming\\WebRepo\\WebRepo\\WebRepo.Infra\\WebRepo.Infra.csproj": {
+              "projectPath": "C:\\Programming\\WebRepo\\WebRepo\\WebRepo.Infra\\WebRepo.Infra.csproj"
             }
           }
         }
