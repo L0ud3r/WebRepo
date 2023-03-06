@@ -11,6 +11,7 @@ using Newtonsoft.Json.Linq;
 using System.Text;
 using Microsoft.AspNetCore.Builder;
 using WebRepo.App.Services;
+using WebRepo.App.Interfaces;
 
 namespace WebRepo
 {
@@ -32,6 +33,7 @@ namespace WebRepo
             builder.Services.AddScoped<IRepository<FileBlob>, Repository<FileBlob, WebRepoAppContext>>();
 
             builder.Services.AddScoped<IFileService, FileService>();
+            builder.Services.AddScoped<IUserService, UserService>();
 
             /**                                                         **/
 

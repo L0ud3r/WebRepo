@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using WebRepo.App.Interfaces;
 using WebRepo.DAL.Default;
 using WebRepo.DAL.Entities;
 using WebRepo.Infra;
@@ -10,33 +11,35 @@ namespace WebRepo.App.Services
     public class FileService : IFileService
     {
         private readonly IRepository<FileBlob> _filesRepository;
+        private readonly IRepository<User> _userRepository;
 
-        public FileService(IRepository<FileBlob> filesRepository)
+        public FileService(IRepository<FileBlob> filesRepository, IRepository<User> userRepository)
         {
             _filesRepository = filesRepository;
+            _userRepository = userRepository;
         }
 
-        public  async Task<List<FileBlob>> Get()
+        public async Task<List<FileBlob>> Get()
         {
             return _filesRepository.Get().Where(x => x.Active == true).ToList();
         }
 
-        public  async Task<FileBlob> GetFileByIdentifier(IRepository<FileBlob> _filesRepository, string fileIdentifier)
+        public async Task<FileBlob> GetFileByIdentifier(string fileIdentifier)
         {
             return _filesRepository.Get().Where(x => x.FileIdentifier == fileIdentifier && x.Active == true).SingleOrDefault();
         }
 
-        public  async Task<List<FileBlob>> GetByUser(IRepository<FileBlob> _filesRepository, int idUser)
+        public async Task<List<FileBlob>> GetByUser(int idUser)
         {
             return _filesRepository.Get().Where(x => x.User.Id == idUser && x.Active == true).ToList();
         }
 
-        public  async Task<List<FileBlob>> GetByFavourites(IRepository<FileBlob> _filesRepository, int idUser)
+        public async Task<List<FileBlob>> GetByFavourites(int idUser)
         {
             return _filesRepository.Get().Where(x => x.User.Id == idUser && x.isFavourite == true && x.Active == true).ToList();
         }
 
-        public  async Task<FileBlob> PostFile(IRepository<FileBlob> _filesRepository, IRepository<User> _userRepository, string fileIdentifier, string exactpath, IFormFile file)
+        public async Task<FileBlob> PostFile(string fileIdentifier, string exactpath, IFormFile file)
         {
             try
             {
@@ -67,7 +70,7 @@ namespace WebRepo.App.Services
             }
         }
     
-        public  async Task<bool> AddRemoveFavourites(IRepository<FileBlob> _filesRepository, int id)
+        public async Task<bool> AddRemoveFavourites(int id)
         {
             try
             {

@@ -14,6 +14,7 @@ using System.Security.Claims;
 using Microsoft.Extensions.Logging;
 using WebRepo.App.Services;
 using WebRepo.App.Models;
+using WebRepo.App.Interfaces;
 
 namespace WebRepo.Controllers
 {
@@ -22,18 +23,20 @@ namespace WebRepo.Controllers
     public class UserController : Controller
     {
         private readonly IRepository<User> _userRepository;
+        private readonly IUserService _userService;
         private readonly ILogger<UserController> _logger;
 
-        public UserController(IRepository<User> userRepository, ILogger<UserController> logger)
+        public UserController(IRepository<User> userRepository, ILogger<UserController> logger, IUserService userService)
         {
             _userRepository = userRepository;
             _logger = logger;
+            _userService = userService;
         }
 
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var usersList = await UserServices.Get(_userRepository);
+            var usersList = await _userService.Get();
 
             return new JsonResult(usersList);
         }
@@ -41,7 +44,7 @@ namespace WebRepo.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> Details(int id)
         {
-            var user = await UserServices.GetbyId(_userRepository, id);
+            var user = await _userService.GetbyId(id);
 
             return new JsonResult(user);
         }
@@ -54,12 +57,18 @@ namespace WebRepo.Controllers
             else if (_userRepository.Get().Where(x => x.Email == user.Email) != null)
                  return new JsonResult(false) { StatusCode = 400, Value = "Email already exists!" };
 
-            var userLogged = await UserServices.Create(_userRepository, user);
+            User newUser = new User();
 
-            if (userLogged == null)
+            newUser.Username = user.Username;
+            newUser.Email = user.Email;
+            string password = user.Password;
+
+            var userCreated = await _userService.Create(newUser, password);
+
+            if (userCreated == null)
                 return new JsonResult(false) { StatusCode = 400, Value = "Error on creating user" };
 
-            return new JsonResult(true) { StatusCode = 200, Value = userLogged };
+            return new JsonResult(true) { StatusCode = 200, Value = userCreated };
         }
 
         [HttpPatch]
@@ -67,12 +76,17 @@ namespace WebRepo.Controllers
         {
             if (ModelState.IsValid)
             {
-                User userEdit = _userRepository.Get().FirstOrDefault(x => x.Id == user.Id && x.Active == true);
+                User userEdit = await _userService.GetbyId((int)user.Id);
 
                 if (userEdit == null)
                     return NotFound();
 
-                var userEditted = await UserServices.Edit(_userRepository, user, userEdit);
+                User editUser = new User();
+
+                editUser.Username = user.Username;
+                editUser.Email = user.Email;
+
+                var userEditted = await _userService.Edit(editUser, userEdit);
 
                 if (userEditted == null)
                     return new JsonResult(false) { StatusCode = 400, Value = "Error on editting user" };
@@ -87,12 +101,17 @@ namespace WebRepo.Controllers
         {
             if (ModelState.IsValid)
             {
-                User userEdit = _userRepository.Get().FirstOrDefault(x => x.Id == user.Id && x.Active == true);
+                User userEdit = await _userService.GetbyId((int)user.Id);
 
                 if (userEdit == null)
                     return NotFound();
 
-                var userEditted = await UserServices.RecoverPassword(_userRepository, user, userEdit);
+                User currentUser = new User();
+
+                currentUser.Email = user.Email;
+                string newPassword = user.Password;
+
+                var userEditted = await _userService.RecoverPassword(currentUser, userEdit, newPassword);
 
                 if(userEditted == null)
                     return new JsonResult(false) { StatusCode = 400, Value = "Error on recovering password" };
@@ -105,7 +124,7 @@ namespace WebRepo.Controllers
         [HttpDelete]
         public async Task<IActionResult> Delete(int id)
         {
-            var result = await UserServices.Delete(_userRepository, id);
+            var result = await _userService.Delete(id);
 
             if(result == false)
                 return new JsonResult(false) { StatusCode = 404, Value = result };
@@ -124,7 +143,7 @@ namespace WebRepo.Controllers
         public async Task<IActionResult> Login([Bind("Email,Password")] LoginViewModel data)
         {
 
-            var user = await UserServices.Login(_userRepository, data);
+            var user = await _userService.Login(data.Email, data.Password);
 
             var claims = new List<Claim>
             {

@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
-using WebRepo.App.Services;
+using WebRepo.App.Interfaces;
 using WebRepo.DAL.Entities;
 using WebRepo.Infra;
 
@@ -13,17 +13,19 @@ namespace WebRepo.Controllers
 
         private readonly IRepository<FileBlob> _filesRepository;
         private readonly IRepository<User> _userRepository;
+        private readonly IFileService _fileService;
 
-        public FileController(IRepository<FileBlob> filesRepository, IRepository<User> userRepository)
+        public FileController(IRepository<FileBlob> filesRepository, IRepository<User> userRepository, IFileService fileService)
         {
             _filesRepository = filesRepository;
             _userRepository = userRepository;
+            _fileService = fileService;
         }
 
         [HttpGet]
         public async Task<IActionResult> Get()
         {
-            var files = await FileService.Get();
+            var files = await _fileService.Get();
 
             if (files.Count <= 0)
                 return new JsonResult(false) { StatusCode = 404, Value = "There are no files on the database" };
@@ -34,7 +36,7 @@ namespace WebRepo.Controllers
         [HttpGet("{idUser}")]
         public async Task<IActionResult> GetbyUser(int idUser)
         {
-            var userFiles = await FileService.GetByUser(_filesRepository, idUser);
+            var userFiles = await _fileService.GetByUser(idUser);
 
             if (userFiles.Count <= 0)
                 return new JsonResult(false) { StatusCode = 404, Value = "You don't have any files!" };
@@ -45,7 +47,7 @@ namespace WebRepo.Controllers
         [HttpGet("favourites/{idUser}")]
         public async Task<IActionResult> GetbyFavourites(int idUser)
         {
-            var userFavouriteFiles = await FileService.GetByFavourites(_filesRepository, idUser);
+            var userFavouriteFiles = await _fileService.GetByFavourites(idUser);
 
             if (userFavouriteFiles.Count <= 0)
                 return new JsonResult(false) { StatusCode = 404, Value = "You don't have any favourite files!" };
@@ -86,7 +88,7 @@ namespace WebRepo.Controllers
                     await file.CopyToAsync(stream);
                 }
 
-                var newFile = await FileService.PostFile(_filesRepository, _userRepository, fileIdentifier, filepath, file);
+                var newFile = await _fileService.PostFile(fileIdentifier, filepath, file);
 
                 if(newFile == null)
                     return new JsonResult(false) { StatusCode = 400, Value = "Error uploading file" };
@@ -111,7 +113,7 @@ namespace WebRepo.Controllers
                 contenttype = "application/octet-stream";
             }
 
-            var file = await FileService.GetFileByIdentifier(_filesRepository, filename);
+            var file = await _fileService.GetFileByIdentifier(filename);
 
             if (file == null)
                 return new JsonResult(false) { StatusCode = 404, Value = "Couldn't download file" };
@@ -123,7 +125,7 @@ namespace WebRepo.Controllers
         [HttpPatch("addremovefavourites/{id}")]
         public async Task<IActionResult> AddRemoveFavourites(int id)
         {
-            var result = await FileService.AddRemoveFavourites(_filesRepository, id);
+            var result = await _fileService.AddRemoveFavourites(id);
 
             if (result == false)
                 return new JsonResult(result) { StatusCode = 404, Value = result };
