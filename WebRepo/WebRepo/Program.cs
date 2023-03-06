@@ -32,7 +32,6 @@ namespace WebRepo
 
             /**                                                         **/
 
-
             // Add services to the container.
 
             builder.Services.AddCors(c =>

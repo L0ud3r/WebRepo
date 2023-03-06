@@ -3,13 +3,18 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 17
 VisualStudioVersion = 17.4.33122.133
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebRepo", "WebRepo\WebRepo.csproj", "{32C1504F-9C6B-4E23-8D5F-CFDE51145CFE}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebRepo", "WebRepo\WebRepo.csproj", "{32C1504F-9C6B-4E23-8D5F-CFDE51145CFE}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebRepo.FE", "WebRepo.FE\WebRepo.FE.csproj", "{E11A01FA-3978-4E8F-A90E-62F5BA2465D4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebRepo.FE", "WebRepo.FE\WebRepo.FE.csproj", "{E11A01FA-3978-4E8F-A90E-62F5BA2465D4}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebRepo.DAL", "WebRepo.DAL\WebRepo.DAL.csproj", "{C11745FF-8461-41FB-9F1D-5407951A5B57}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebRepo.DAL", "WebRepo.DAL\WebRepo.DAL.csproj", "{C11745FF-8461-41FB-9F1D-5407951A5B57}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "WebRepo.Infra", "WebRepo.Infra\WebRepo.Infra.csproj", "{953E0969-CD8A-49AA-AA55-E4EA65345654}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebRepo.Infra", "WebRepo.Infra\WebRepo.Infra.csproj", "{953E0969-CD8A-49AA-AA55-E4EA65345654}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebRepo.App", "WebRepo.App\WebRepo.App.csproj", "{7A6FE49C-E72C-4189-BB2F-6143607A2623}"
+	ProjectSection(ProjectDependencies) = postProject
+		{953E0969-CD8A-49AA-AA55-E4EA65345654} = {953E0969-CD8A-49AA-AA55-E4EA65345654}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -33,6 +38,10 @@ Global
 		{953E0969-CD8A-49AA-AA55-E4EA65345654}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{953E0969-CD8A-49AA-AA55-E4EA65345654}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{953E0969-CD8A-49AA-AA55-E4EA65345654}.Release|Any CPU.Build.0 = Release|Any CPU
+		{7A6FE49C-E72C-4189-BB2F-6143607A2623}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{7A6FE49C-E72C-4189-BB2F-6143607A2623}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{7A6FE49C-E72C-4189-BB2F-6143607A2623}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{7A6FE49C-E72C-4189-BB2F-6143607A2623}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

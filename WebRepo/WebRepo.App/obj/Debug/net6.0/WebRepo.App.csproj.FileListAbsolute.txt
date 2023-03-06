@@ -1,0 +1,17 @@
+C:\Programming\WebRepo\WebRepo\WebRepo.App\obj\Debug\net6.0\WebRepo.App.csproj.AssemblyReference.cache
+C:\Programming\WebRepo\WebRepo\WebRepo.App\obj\Debug\net6.0\WebRepo.App.GeneratedMSBuildEditorConfig.editorconfig
+C:\Programming\WebRepo\WebRepo\WebRepo.App\obj\Debug\net6.0\WebRepo.App.AssemblyInfoInputs.cache
+C:\Programming\WebRepo\WebRepo\WebRepo.App\obj\Debug\net6.0\WebRepo.App.AssemblyInfo.cs
+C:\Programming\WebRepo\WebRepo\WebRepo.App\obj\Debug\net6.0\WebRepo.App.csproj.CoreCompileInputs.cache
+C:\Programming\WebRepo\WebRepo\WebRepo.App\bin\Debug\net6.0\WebRepo.App.deps.json
+C:\Programming\WebRepo\WebRepo\WebRepo.App\bin\Debug\net6.0\WebRepo.App.dll
+C:\Programming\WebRepo\WebRepo\WebRepo.App\bin\Debug\net6.0\WebRepo.App.pdb
+C:\Programming\WebRepo\WebRepo\WebRepo.App\bin\Debug\net6.0\WebRepo.DAL.dll
+C:\Programming\WebRepo\WebRepo\WebRepo.App\bin\Debug\net6.0\WebRepo.Infra.dll
+C:\Programming\WebRepo\WebRepo\WebRepo.App\bin\Debug\net6.0\WebRepo.Infra.pdb
+C:\Programming\WebRepo\WebRepo\WebRepo.App\bin\Debug\net6.0\WebRepo.DAL.pdb
+C:\Programming\WebRepo\WebRepo\WebRepo.App\obj\Debug\net6.0\WebRepo.App.csproj.CopyComplete
+C:\Programming\WebRepo\WebRepo\WebRepo.App\obj\Debug\net6.0\WebRepo.App.dll
+C:\Programming\WebRepo\WebRepo\WebRepo.App\obj\Debug\net6.0\refint\WebRepo.App.dll
+C:\Programming\WebRepo\WebRepo\WebRepo.App\obj\Debug\net6.0\WebRepo.App.pdb
+C:\Programming\WebRepo\WebRepo\WebRepo.App\obj\Debug\net6.0\ref\WebRepo.App.dll

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace WebRepo.Models
+namespace WebRepo.App.Models
 {
     public class UserViewModel : LoginViewModel
     {
