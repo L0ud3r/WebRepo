@@ -8,6 +8,11 @@ using WebRepo.DAL.Entities;
 using WebRepo.Infra;
 using WebRepo.Models;
 using Microsoft.EntityFrameworkCore;
+using NuGet.Common;
+using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Authentication;
+using System.Security.Claims;
+using Microsoft.Extensions.Logging;
 
 namespace WebRepo.Controllers
 {
@@ -15,31 +20,30 @@ namespace WebRepo.Controllers
     [Route("[controller]")]
     public class UserController : Controller
     {
-        private IRepository<User> _userRepository;
+        private readonly IRepository<User> _userRepository;
+        private readonly ILogger<UserController> _logger;
 
-        public UserController(IRepository<User> userRepository)
+        public UserController(IRepository<User> userRepository, ILogger<UserController> logger)
         {
             _userRepository = userRepository;
+            _logger = logger;
         }
-
 
         // GET: UserController
         [HttpGet]
-        public IActionResult Get()
+        public async Task<IActionResult> Get()
         {
-            return new JsonResult(_userRepository.Get());
+            return new JsonResult(_userRepository.Get().Where(x => x.Active == true).AsQueryable());
         }
 
-        // GET: UserController/Details/5
         [HttpGet("{id}")]
-        public IActionResult Details(int id)
+        public async Task<IActionResult> Details(int id)
         {
             return new JsonResult(_userRepository.Get().FirstOrDefault(x => x.Id == id && x.Active == true));
         }
 
-        // GET: UserController/Create
         [HttpPost]
-        public IActionResult Create([Bind("Username, Email, Password")] UserViewModel user)
+        public async Task<IActionResult> Create([Bind("Username, Email, Password")] UserViewModel user)
         {
             User newUser = new User();
 
@@ -78,9 +82,8 @@ namespace WebRepo.Controllers
             
         }
 
-        // GET: UserController/Edit/5
         [HttpPatch]
-        public IActionResult Edit([Bind("Id,Username,Email,Password")] UserViewModel user)
+        public async Task<IActionResult> Edit([Bind("Id,Username,Email,Password")] UserViewModel user)
         {
             if (ModelState.IsValid)
             {
@@ -116,9 +119,8 @@ namespace WebRepo.Controllers
             return BadRequest();
         }
 
-        // GET: UserController/Delete/5
         [HttpDelete]
-        public IActionResult Delete(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             if (_userRepository.Exists(id))
             {
@@ -133,9 +135,101 @@ namespace WebRepo.Controllers
 
         // GET: UserController/Delete/5
         [HttpDelete("Remove")]
-        public IActionResult Remove(int id)
+        public async Task<IActionResult> Remove(int id)
         {
             return View();
+        }
+
+        [HttpPost("Login")]
+        public async Task<IActionResult> Login([Bind("Email,Password")] LoginViewModel data)
+        {
+            try
+            {
+                //Procurar na database user com email
+                var user = _userRepository.Get().Where(x => x.Email == data.Email && x.Active == true).FirstOrDefault();
+
+                if (user != null)
+                {
+                    if (!VerifyPasswordHash(data.Password, Convert.FromBase64String(user.PasswordHash), Convert.FromBase64String(user.PasswordSalt)))
+                    {
+                        return new JsonResult(false) { StatusCode = 400, Value = "Wrong Password" };
+                    }
+
+                    var claims = new List<Claim>
+                    {
+                        new Claim(ClaimTypes.Email, user.Email),
+                        new Claim(ClaimTypes.Name, user.Username),
+                        new Claim(ClaimTypes.Role, "User"),
+                    };
+
+                    var claimsIdentity = new ClaimsIdentity(
+                        claims, CookieAuthenticationDefaults.AuthenticationScheme);
+
+                    var authProperties = new AuthenticationProperties
+                    {
+                        AllowRefresh = true,
+                        // Refreshing the authentication session should be allowed.
+
+                        //ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(10),
+                        // The time at which the authentication ticket expires. A 
+                        // value set here overrides the ExpireTimeSpan option of 
+                        // CookieAuthenticationOptions set with AddCookie.
+
+                        IsPersistent = true,
+                        // Whether the authentication session is persisted across 
+                        // multiple requests. When used with cookies, controls
+                        // whether the cookie's lifetime is absolute (matching the
+                        // lifetime of the authentication ticket) or session-based.
+
+                        IssuedUtc = DateTime.Now
+                        // The time at which the authentication ticket was issued.
+
+                        //RedirectUri = <string>
+                        // The full path or absolute URI to be used as an http 
+                        // redirect response value.
+                    };
+
+                    await HttpContext.SignInAsync(
+                        CookieAuthenticationDefaults.AuthenticationScheme,
+                        new ClaimsPrincipal(claimsIdentity),
+                        authProperties);
+
+                    // Check the response headers for the Set-Cookie header
+                    var responseCookies = Response.Headers["Set-Cookie"].ToString();
+
+                    if (responseCookies.Contains(".AspNetCore.Application.Id"))
+                    {
+                        _logger.LogInformation("Authentication cookie registered successfully.");
+                    }
+                    else
+                    {
+                        _logger.LogWarning("Authentication cookie not found in response headers.");
+                    }
+
+                    return new JsonResult(true) { StatusCode = 200, Value = responseCookies };
+                }
+
+                return new JsonResult(false) { StatusCode = 400, Value = "Wrong Email" };
+            }
+            catch (Exception e)
+            {
+                return new JsonResult(e.Message);
+            }
+        }
+
+        [HttpPost("Logout")]
+        public async Task<IActionResult> Logout()
+        {
+            if (User.Identity.IsAuthenticated)
+            {
+                // Clear the existing external cookie
+                await HttpContext.SignOutAsync(
+                    CookieAuthenticationDefaults.AuthenticationScheme);
+
+                return new JsonResult(true) { StatusCode = 200, Value = "Logged out successfully" };
+            }
+
+            return new JsonResult(false) { StatusCode = 400, Value = "User already logged out" };
         }
 
         public static void CreatePasswordHash(string password, out byte[] passwordHash, out byte[] passwordSalt)

@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebRepo.App.Data;
 
@@ -11,9 +12,11 @@ using WebRepo.App.Data;
 namespace WebRepo.App.Migrations
 {
     [DbContext(typeof(WebRepoAppContext))]
-    partial class WebRepoAppContextModelSnapshot : ModelSnapshot
+    [Migration("20230305185852_UserFiles")]
+    partial class UserFiles
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -65,14 +68,69 @@ namespace WebRepo.App.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
-                    b.Property<bool>("isFavourite")
-                        .HasColumnType("bit");
-
                     b.HasKey("Id");
 
                     b.HasIndex("UserId");
 
                     b.ToTable("Files");
+                });
+
+            modelBuilder.Entity("WebRepo.DAL.Entities.FileCdn", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("CdnAccessKey")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CdnProvider")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CdnRegion")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CdnSecretKey")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("CdnUrl")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("ContentType")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("FileName")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("FileUrl")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<long>("Size")
+                        .HasColumnType("bigint");
+
+                    b.Property<int?>("UpdatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("FilesCdn");
                 });
 
             modelBuilder.Entity("WebRepo.DAL.Entities.User", b =>

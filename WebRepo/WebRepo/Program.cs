@@ -9,6 +9,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Linq;
 using System.Text;
+using Microsoft.AspNetCore.Builder;
 
 namespace WebRepo
 {
@@ -17,12 +18,16 @@ namespace WebRepo
         public static void Main(string[] args)
         {
             var builder = WebApplication.CreateBuilder(args);
+            var cookiePolicyOptions = new CookiePolicyOptions
+            {
+                MinimumSameSitePolicy = SameSiteMode.Strict,
+            };
+
             builder.Services.AddDbContext<WebRepoAppContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("WebRepoContext") ?? throw new InvalidOperationException("Connection string 'WebRepoContext' not found.")));
 
             /** Adicionar abaixo as Scopes (repositorios) de cada entidade da database **/
 
             builder.Services.AddScoped<IRepository<User>, Repository<User, WebRepoAppContext>>();
-            builder.Services.AddScoped<IRepository<FileCdn>, Repository<FileCdn, WebRepoAppContext>>();
             builder.Services.AddScoped<IRepository<FileBlob>, Repository<FileBlob, WebRepoAppContext>>();
 
             /**                                                         **/
@@ -41,9 +46,22 @@ namespace WebRepo
                     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                 });
 
+            builder.Services.AddLogging(loggingBuilder =>
+            {
+                loggingBuilder.AddConsole();
+                loggingBuilder.AddDebug();
+            });
+
             /** Adicionar abaixo authentication schema **/
 
-
+            builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+            .AddCookie(options =>
+            {
+                options.Cookie.Name = ".AspNetCore.Application.Id";
+                options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
+                options.SlidingExpiration = true;
+                options.AccessDeniedPath = "/Forbidden/";
+            });
 
             /**                                        **/
 
@@ -73,6 +91,8 @@ namespace WebRepo
 
             app.UseStaticFiles();
 
+            app.UseCookiePolicy(cookiePolicyOptions);
+
             app.UseRouting();
 
             app.UseAuthentication();
@@ -81,9 +101,15 @@ namespace WebRepo
 
             app.UseAuthorization();
 
+            app.MapDefaultControllerRoute();
+
             app.MapControllers();
 
             app.Run();
+
+            // Retrieve the ILogger instance
+            var logger = app.Services.GetRequiredService<ILogger<Program>>();
+            logger.LogInformation("Application started");
         }
     }
 }

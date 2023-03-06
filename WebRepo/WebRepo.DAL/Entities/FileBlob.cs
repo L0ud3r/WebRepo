@@ -19,6 +19,8 @@ namespace WebRepo.DAL.Entities
         public string ContentType { get; set; }
 
         public long ContentLength { get; set; }
+        public bool isFavourite { get; set; }
+        public virtual User User { get; set; }
 
         //// Optional properties for tracking who uploaded the file
         //public string UploadedBy { get; set; }
