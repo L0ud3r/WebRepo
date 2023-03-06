@@ -12,6 +12,11 @@ namespace WebRepo.App.Services
             return _filesRepository.Get().Where(x => x.Active == true).ToList();
         }
 
+        public static async Task<FileBlob> GetFileByIdentifier(IRepository<FileBlob> _filesRepository, string fileIdentifier)
+        {
+            return _filesRepository.Get().Where(x => x.FileIdentifier == fileIdentifier && x.Active == true).SingleOrDefault();
+        }
+
         public static async Task<List<FileBlob>> GetByUser(IRepository<FileBlob> _filesRepository, int idUser)
         {
             return _filesRepository.Get().Where(x => x.User.Id == idUser && x.Active == true).ToList();
@@ -22,7 +27,7 @@ namespace WebRepo.App.Services
             return _filesRepository.Get().Where(x => x.User.Id == idUser && x.isFavourite == true && x.Active == true).ToList();
         }
 
-        public static async Task<FileBlob> PostFile(IRepository<FileBlob> _filesRepository, IRepository<User> _userRepository, string filename, string exactpath, IFormFile file)
+        public static async Task<FileBlob> PostFile(IRepository<FileBlob> _filesRepository, IRepository<User> _userRepository, string fileIdentifier, string exactpath, IFormFile file)
         {
             try
             {
@@ -31,7 +36,8 @@ namespace WebRepo.App.Services
                 /** ALTERAR O ID TENDO EM CONTA O USER AUTENTICADO **/
 
                 newFile.User = _userRepository.Get().Where(x => x.Id == 1).SingleOrDefault();
-                newFile.FileName = filename;
+                newFile.FileIdentifier = fileIdentifier;
+                newFile.FileName = file.FileName;
                 newFile.PathAPI = exactpath;
                 newFile.ContentLength = file.Length;
                 newFile.ContentType = file.ContentType;

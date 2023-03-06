@@ -57,7 +57,7 @@ namespace WebRepo.Controllers
         [Route("uploadfile")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> UploadFile(IFormFile file, CancellationToken cancellationtoken)
+        public async Task<IActionResult> UploadFile(IFormFile file)
         {
             var result = await WriteFile(file);
 
@@ -66,12 +66,12 @@ namespace WebRepo.Controllers
 
         private async Task<IActionResult> WriteFile(IFormFile file)
         {
-            string filename = string.Empty;
+            string fileIdentifier = string.Empty;
 
             try
             {
                 var extension = "." + file.FileName.Split('.')[file.FileName.Split('.').Length - 1];
-                filename = DateTime.Now.Ticks.ToString() + extension;
+                fileIdentifier = DateTime.Now.Ticks.ToString() + extension;
 
                 var filepath = Path.Combine(Directory.GetCurrentDirectory(), "..\\WebRepo.DAL\\Files");
 
@@ -80,13 +80,13 @@ namespace WebRepo.Controllers
                     Directory.CreateDirectory(filepath);
                 }
 
-                var exactpath = Path.Combine(Directory.GetCurrentDirectory(), "..\\WebRepo.DAL\\Files", filename);
+                var exactpath = Path.Combine(Directory.GetCurrentDirectory(), "..\\WebRepo.DAL\\Files", fileIdentifier);
                 using (var stream = new FileStream(exactpath, FileMode.Create))
                 {
                     await file.CopyToAsync(stream);
                 }
 
-                var newFile = await FileServices.PostFile(_filesRepository, _userRepository, filename, filepath, file);
+                var newFile = await FileServices.PostFile(_filesRepository, _userRepository, fileIdentifier, filepath, file);
 
                 if(newFile == null)
                     return new JsonResult(false) { StatusCode = 400, Value = "Error uploading file" };
@@ -111,8 +111,13 @@ namespace WebRepo.Controllers
                 contenttype = "application/octet-stream";
             }
 
+            var file = await FileServices.GetFileByIdentifier(_filesRepository, filename);
+
+            if (file == null)
+                return new JsonResult(false) { StatusCode = 404, Value = "Couldn't download file" };
+
             var bytes = await System.IO.File.ReadAllBytesAsync(filepath);
-            return File(bytes, contenttype, Path.GetFileName(filepath));
+            return File(bytes, contenttype, file.FileName);
         }
 
         [HttpPatch("addremovefavourites/{id}")]

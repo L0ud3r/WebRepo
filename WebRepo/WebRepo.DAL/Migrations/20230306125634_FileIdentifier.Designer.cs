@@ -3,6 +3,7 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using WebRepo.App.Data;
 
@@ -11,9 +12,11 @@ using WebRepo.App.Data;
 namespace WebRepo.App.Migrations
 {
     [DbContext(typeof(WebRepoAppContext))]
-    partial class WebRepoAppContextModelSnapshot : ModelSnapshot
+    [Migration("20230306125634_FileIdentifier")]
+    partial class FileIdentifier
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        /// <inheritdoc />
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
