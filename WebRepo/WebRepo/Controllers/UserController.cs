@@ -145,6 +145,9 @@ namespace WebRepo.Controllers
 
             var user = await _userService.Login(data.Email, data.Password);
 
+            if (user == null)
+                return NotFound();
+
             var claims = new List<Claim>
             {
                 new Claim(ClaimTypes.Email, user.Email),

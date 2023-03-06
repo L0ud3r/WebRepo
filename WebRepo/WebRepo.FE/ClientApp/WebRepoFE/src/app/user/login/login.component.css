@@ -20,3 +20,8 @@
   border-bottom-right-radius: .3rem;
   }
   }
+
+.modified:hover{
+  color: red;
+  background: white;
+}
