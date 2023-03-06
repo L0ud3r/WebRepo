@@ -16,7 +16,6 @@ namespace WebRepo.App.Data
         }
 
         public DbSet<User> Users { get; set; } = default!;
-        public DbSet<FileCdn> FilesCdn { get; set; } = default!;
         public DbSet<FileBlob> Files { get; set; } = default!;
     }
 }
