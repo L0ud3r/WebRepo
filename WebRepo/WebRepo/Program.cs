@@ -10,6 +10,7 @@ using Microsoft.IdentityModel.Tokens;
 using Newtonsoft.Json.Linq;
 using System.Text;
 using Microsoft.AspNetCore.Builder;
+using WebRepo.App.Services;
 
 namespace WebRepo
 {
@@ -29,6 +30,8 @@ namespace WebRepo
 
             builder.Services.AddScoped<IRepository<User>, Repository<User, WebRepoAppContext>>();
             builder.Services.AddScoped<IRepository<FileBlob>, Repository<FileBlob, WebRepoAppContext>>();
+
+            builder.Services.AddScoped<IFileService, FileService>();
 
             /**                                                         **/
 
