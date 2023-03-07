@@ -1,10 +1,8 @@
 ﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore;
 using WebRepo.App.Interfaces;
-using WebRepo.DAL.Default;
 using WebRepo.DAL.Entities;
 using WebRepo.Infra;
+using System.Security.Claims;
 
 namespace WebRepo.App.Services
 {
@@ -12,11 +10,13 @@ namespace WebRepo.App.Services
     {
         private readonly IRepository<FileBlob> _filesRepository;
         private readonly IRepository<User> _userRepository;
+        //private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public FileService(IRepository<FileBlob> filesRepository, IRepository<User> userRepository)
+        public FileService(IRepository<FileBlob> filesRepository, IRepository<User> userRepository, IHttpContextAccessor httpContextAccessor)
         {
             _filesRepository = filesRepository;
             _userRepository = userRepository;
+            //_httpContextAccessor = httpContextAccessor;
         }
 
         public async Task<List<FileBlob>> Get()
@@ -29,9 +29,9 @@ namespace WebRepo.App.Services
             return _filesRepository.Get().Where(x => x.FileIdentifier == fileIdentifier && x.Active == true).SingleOrDefault();
         }
 
-        public async Task<List<FileBlob>> GetByUser(int idUser)
+        public async Task<List<FileBlob>> GetByUser(string userEmail)
         {
-            return _filesRepository.Get().Where(x => x.User.Id == idUser && x.Active == true).ToList();
+            return _filesRepository.Get().Where(x => x.User.Email == userEmail && x.Active == true).ToList();
         }
 
         public async Task<List<FileBlob>> GetByFavourites(int idUser)
@@ -39,15 +39,13 @@ namespace WebRepo.App.Services
             return _filesRepository.Get().Where(x => x.User.Id == idUser && x.isFavourite == true && x.Active == true).ToList();
         }
 
-        public async Task<FileBlob> PostFile(string fileIdentifier, string exactpath, IFormFile file)
+        public async Task<FileBlob> PostFile(string fileIdentifier, string exactpath, string userEmail, IFormFile file)
         {
             try
             {
                 FileBlob newFile = new FileBlob();
 
-                /** ALTERAR O ID TENDO EM CONTA O USER AUTENTICADO **/
-
-                newFile.User = _userRepository.Get().Where(x => x.Id == 1).SingleOrDefault();
+                newFile.User = _userRepository.Get().Where(x => x.Email == userEmail).SingleOrDefault();
                 newFile.FileIdentifier = fileIdentifier;
                 newFile.FileName = file.FileName;
                 newFile.PathAPI = exactpath;

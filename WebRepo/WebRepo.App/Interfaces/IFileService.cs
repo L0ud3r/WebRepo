@@ -13,9 +13,9 @@ namespace WebRepo.App.Interfaces
     {
         Task<List<FileBlob>> Get();
         Task<FileBlob> GetFileByIdentifier(string fileIdentifier);
-        Task<List<FileBlob>> GetByUser(int idUser);
+        Task<List<FileBlob>> GetByUser(string userEmail);
         Task<List<FileBlob>> GetByFavourites(int idUser);
-        Task<FileBlob> PostFile(string fileIdentifier, string exactpath, IFormFile file);
+        Task<FileBlob> PostFile(string fileIdentifier, string exactpath, string userEmail, IFormFile file);
         Task<bool> AddRemoveFavourites(int id);
     }
 }

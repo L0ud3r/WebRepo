@@ -15,6 +15,8 @@ using Microsoft.Extensions.Logging;
 using WebRepo.App.Services;
 using WebRepo.App.Models;
 using WebRepo.App.Interfaces;
+using System.Net;
+using WebRepo.App.Migrations;
 
 namespace WebRepo.Controllers
 {
@@ -142,67 +144,78 @@ namespace WebRepo.Controllers
         [HttpPost("login")]
         public async Task<IActionResult> Login([Bind("Email,Password")] LoginViewModel data)
         {
-
             var user = await _userService.Login(data.Email, data.Password);
 
             if (user == null)
                 return NotFound();
 
-            var claims = new List<Claim>
-            {
-                new Claim(ClaimTypes.Email, user.Email),
-                new Claim(ClaimTypes.Name, user.Username),
-                new Claim(ClaimTypes.Role, "User")
-            };
+            string token = await _userService.GenerateToken(user.Id);
 
-            var claimsIdentity = new ClaimsIdentity(
-                claims, CookieAuthenticationDefaults.AuthenticationScheme);
+            return new JsonResult(true) { StatusCode = 200, Value = new { Success = true, token = token } };
 
-            var authProperties = new AuthenticationProperties
-            {
-                AllowRefresh = true,
-                // Refreshing the authentication session should be allowed.
+            //var claims = new List<Claim>
+            //{
+            //    new Claim(ClaimTypes.Email, user.Email),
+            //    new Claim(ClaimTypes.Name, user.Username),
+            //    new Claim(ClaimTypes.Role, "User")
+            //};
 
-                //ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(10),
-                // The time at which the authentication ticket expires. A 
-                // value set here overrides the ExpireTimeSpan option of 
-                // CookieAuthenticationOptions set with AddCookie.
+            //var claimsIdentity = new ClaimsIdentity(
+            //    claims, CookieAuthenticationDefaults.AuthenticationScheme);
 
-                IsPersistent = true,
-                // Whether the authentication session is persisted across 
-                // multiple requests. When used with cookies, controls
-                // whether the cookie's lifetime is absolute (matching the
-                // lifetime of the authentication ticket) or session-based.
+            //var authProperties = new AuthenticationProperties
+            //{
+            //    AllowRefresh = true,
+            //    // Refreshing the authentication session should be allowed.
 
-                IssuedUtc = DateTime.Now
-                // The time at which the authentication ticket was issued.
+            //    //ExpiresUtc = DateTimeOffset.UtcNow.AddMinutes(10),
+            //    // The time at which the authentication ticket expires. A 
+            //    // value set here overrides the ExpireTimeSpan option of 
+            //    // CookieAuthenticationOptions set with AddCookie.
 
-                //RedirectUri = <string>
-                // The full path or absolute URI to be used as an http 
-                // redirect response value.
-            };
+            //    IsPersistent = true,
+            //    // Whether the authentication session is persisted across 
+            //    // multiple requests. When used with cookies, controls
+            //    // whether the cookie's lifetime is absolute (matching the
+            //    // lifetime of the authentication ticket) or session-based.
 
-            await HttpContext.SignInAsync(
-                CookieAuthenticationDefaults.AuthenticationScheme,
-                new ClaimsPrincipal(claimsIdentity),
-                authProperties);
+            //    IssuedUtc = DateTime.Now
+            //    // The time at which the authentication ticket was issued.
 
-            // Check the response headers for the Set-Cookie header
-            var responseCookies = Response.Headers["Set-Cookie"].ToString();
+            //    //RedirectUri = <string>
+            //    // The full path or absolute URI to be used as an http 
+            //    // redirect response value.
+            //};
 
-            if (responseCookies.Contains(".AspNetCore.Application.Id"))
-            {
-                _logger.LogInformation("Authentication cookie registered successfully.");
+            //await HttpContext.SignInAsync(
+            //    CookieAuthenticationDefaults.AuthenticationScheme,
+            //    new ClaimsPrincipal(claimsIdentity),
+            //    authProperties);
 
-                return new JsonResult(true) { StatusCode = 200, Value = responseCookies };
-            }
+            //// Check the response headers for the Set-Cookie header
+            //var responseCookies = Response.Headers["Set-Cookie"].ToString();
+
+            //if (responseCookies.Contains(".AspNetCore.Application.Id"))
+            //{
+            //    _logger.LogInformation("Authentication cookie registered successfully.");
+
+            //    // Split the cookie into individual fields
+            //    var fields = responseCookies.Split("; ");
+
+            //    foreach (var field in fields)
+            //    {
+            //        Console.WriteLine(field);
+            //    }
+
+            //    return new JsonResult(true) { StatusCode = 200, Value = fields };
+            //}
                     
-            _logger.LogWarning("Authentication cookie not found in response headers.");
+            //_logger.LogWarning("Authentication cookie not found in response headers.");
 
-            return new JsonResult(false) { StatusCode = 404, Value = "Authentication cookie not found in response headers." };
-            
+            //return new JsonResult(false) { StatusCode = 404, Value = "Authentication cookie not found in response headers." };
         }
 
+        //METER EXPIRE DATE PARA ONTEM
         [HttpPost("logout")]
         public async Task<IActionResult> Logout()
         {

@@ -1,1 +1,16 @@
-<p>file works!</p>
+<p>
+  <table class="table table-striped border">
+    <thead>
+        <tr>
+            <th data-field="title">Title</th>
+            <th data-field="releaseDate" data-formatter="dateFormat">Release Date</th>
+            <th data-field="genreName">Genre</th>
+            <th data-field="">Actions</th>
+        </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let file of userFiles">
+        <td>{{file.fileName}}</td>
+      </tr>
+    </tbody>
+</table>

@@ -12,6 +12,7 @@ namespace WebRepo.DAL.Entities
         public User()
         {
             Files = new HashSet<FileBlob>();
+            UserTokens = new HashSet<UserToken>();
         }
 
         public string Username { get; set; }
@@ -19,5 +20,6 @@ namespace WebRepo.DAL.Entities
         public string PasswordHash { get; set; }
         public string Email { get; set; }
         public virtual ICollection<FileBlob> Files { get; set; }
+        public virtual ICollection<UserToken> UserTokens { get; set; }
     }
 }

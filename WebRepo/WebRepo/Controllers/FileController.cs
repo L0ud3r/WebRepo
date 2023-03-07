@@ -1,5 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
+using System.Security.Claims;
 using WebRepo.App.Interfaces;
 using WebRepo.DAL.Entities;
 using WebRepo.Infra;
@@ -33,10 +35,17 @@ namespace WebRepo.Controllers
             return new JsonResult(true) { StatusCode = 200, Value = files };
         }
 
-        [HttpGet("{idUser}")]
-        public async Task<IActionResult> GetbyUser(int idUser)
+        [HttpGet("list")]
+        public async Task<IActionResult> GetbyUser()
         {
-            var userFiles = await _fileService.GetByUser(idUser);
+            string userEmail = "";
+
+            if(User.Identity.IsAuthenticated)
+                userEmail = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value;
+            else
+                return new JsonResult(false) { StatusCode = 401, Value = "User not authenticated" };
+
+            var userFiles = await _fileService.GetByUser(userEmail);
 
             if (userFiles.Count <= 0)
                 return new JsonResult(false) { StatusCode = 404, Value = "You don't have any files!" };
@@ -69,9 +78,15 @@ namespace WebRepo.Controllers
         private async Task<IActionResult> WriteFile(IFormFile file)
         {
             string fileIdentifier = string.Empty;
+            string userEmail = "";
 
             try
             {
+                if (User.Identity.IsAuthenticated)
+                    userEmail = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value;
+                else
+                    return new JsonResult(false) { StatusCode = 401, Value = "User not authenticated" };
+
                 var extension = "." + file.FileName.Split('.')[file.FileName.Split('.').Length - 1];
                 fileIdentifier = DateTime.Now.Ticks.ToString() + extension;
 
@@ -88,7 +103,7 @@ namespace WebRepo.Controllers
                     await file.CopyToAsync(stream);
                 }
 
-                var newFile = await _fileService.PostFile(fileIdentifier, filepath, file);
+                var newFile = await _fileService.PostFile(fileIdentifier, filepath, userEmail, file);
 
                 if(newFile == null)
                     return new JsonResult(false) { StatusCode = 400, Value = "Error uploading file" };
@@ -109,9 +124,7 @@ namespace WebRepo.Controllers
 
             var provider = new FileExtensionContentTypeProvider();
             if (!provider.TryGetContentType(filepath, out var contenttype))
-            {
                 contenttype = "application/octet-stream";
-            }
 
             var file = await _fileService.GetFileByIdentifier(filename);
 

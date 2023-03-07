@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 import { Router } from '@angular/router';
+import { CookieService } from 'ngx-cookie-service';
 import { SharedService } from 'src/app/shared.service';
+import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-login',
@@ -14,7 +16,7 @@ export class LoginComponent {
     Password: ""
   };
 
-  constructor(private service: SharedService, private router : Router) { }
+  constructor(private service: SharedService, private router : Router, private cookieService: CookieService) { }
 
   ngOnInit(): void {
   }
@@ -22,8 +24,24 @@ export class LoginComponent {
   login(): void {
     this.service.login(this.conta).subscribe(
       data => {
-        alert('Login succeded.')
-        console.log(data)
+        alert('Login successfully.')
+        console.log(data);
+
+        /*console.log(name[0]);
+        console.log(name[1]);
+        console.log(formattedDate);
+        console.log(path[1]);
+        console.log(secure);
+        console.log(samesite[1]);*/
+
+        //this.cookieService.set(name[0], name[1], 1, path[1], "localhost" , secure, samesite[1]);
+
+        this.service.token = data.token;
+
+        this.router.navigateByUrl('content').then(() =>{
+          this.router.navigate([decodeURI('content')]);
+        });
+        console.log(this.cookieService.get('.AspNetCore.Application.Id'))
       },
       error => {
         alert('Login failed. Please check your credentials and try again.')

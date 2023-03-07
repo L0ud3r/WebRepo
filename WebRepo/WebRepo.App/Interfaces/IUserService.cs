@@ -16,5 +16,7 @@ namespace WebRepo.App.Interfaces
         Task<User> RecoverPassword(User user, User userEdit, string newPassword);
         Task<bool> Delete(int id);
         Task<User> Login(string email, string password);
+        Task<string> GenerateToken(int userId);
+        Task<User> GetUserByToken(string token);
     }
 }

@@ -21,10 +21,12 @@ namespace WebRepo.App.Services
     public class UserService : IUserService
     {
         private readonly IRepository<User> _userRepository;
+        private readonly IRepository<UserToken> _userTokenRepository;
 
-        public UserService(IRepository<User> userRepository)
+        public UserService(IRepository<User> userRepository, IRepository<UserToken> userTokenRepository)
         {
             _userRepository = userRepository;
+            _userTokenRepository = userTokenRepository;
         }
 
         public async Task<IQueryable> Get()
@@ -155,6 +157,31 @@ namespace WebRepo.App.Services
                 var computeHash = hmac.ComputeHash(Encoding.UTF8.GetBytes(password));
                 return computeHash.SequenceEqual(passwordHash);
             }
+        }
+
+        public async Task<string> GenerateToken(int userId)
+        {
+            var token = Guid.NewGuid().ToString();
+
+            var newUserToken = new UserToken()
+            {
+                UserId = userId,
+                Token = token,
+                Expire = DateTime.Now.AddDays(1),
+                Active = true
+            };
+
+            _userTokenRepository.Insert(newUserToken);
+            _userTokenRepository.Save();
+
+            return token;
+        }
+
+        public async Task<User> GetUserByToken(string token)
+        {
+            var user = await _userTokenRepository.Get().Where(x => x.Token == token && x.Expire > DateTime.Now && x.Active).Select(x => x.User).SingleOrDefaultAsync();
+
+            return user;
         }
     }
 }

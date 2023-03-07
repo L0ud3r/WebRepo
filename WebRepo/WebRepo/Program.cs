@@ -12,6 +12,8 @@ using System.Text;
 using Microsoft.AspNetCore.Builder;
 using WebRepo.App.Services;
 using WebRepo.App.Interfaces;
+using Microsoft.Extensions.Options;
+using WebRepo.Middleware;
 
 namespace WebRepo
 {
@@ -31,9 +33,12 @@ namespace WebRepo
 
             builder.Services.AddScoped<IRepository<User>, Repository<User, WebRepoAppContext>>();
             builder.Services.AddScoped<IRepository<FileBlob>, Repository<FileBlob, WebRepoAppContext>>();
+            builder.Services.AddScoped<IRepository<UserToken>, Repository<UserToken, WebRepoAppContext>>();
 
             builder.Services.AddScoped<IFileService, FileService>();
             builder.Services.AddScoped<IUserService, UserService>();
+
+            builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 
             /**                                                         **/
 
@@ -41,7 +46,18 @@ namespace WebRepo
 
             builder.Services.AddCors(c =>
             {
-                c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+                //c.AddDefaultPolicy(builder =>
+                //{
+                //    builder.WithOrigins("http://localhost:4200")
+                //           .AllowCredentials()
+                //           .AllowAnyHeader()
+                //           .AllowAnyMethod();
+                //});
+                c.AddPolicy("AllowAngularOrigin",
+                builder => builder.WithOrigins("http://localhost:4200")
+                   .AllowCredentials()
+                   .AllowAnyHeader()
+                   .AllowAnyMethod());
             });
 
             builder.Services.AddControllers().AddNewtonsoftJson(
@@ -65,14 +81,18 @@ namespace WebRepo
                 options.ExpireTimeSpan = TimeSpan.FromMinutes(60);
                 options.SlidingExpiration = true;
                 options.AccessDeniedPath = "/Forbidden/";
+                options.Cookie.Path = "/";
+                options.Cookie.HttpOnly = false;
             });
+
+            //builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme).AddCookie();
 
             /**                                        **/
 
-            builder.Services.AddSession(options => {
-                options.IdleTimeout = TimeSpan.FromDays(30);
-                options.Cookie.HttpOnly = true;
-            });
+            //builder.Services.AddSession(options => {
+            //    options.IdleTimeout = TimeSpan.FromDays(30);
+            //    options.Cookie.HttpOnly = true;
+            //});
 
             builder.Services.AddControllers();
             // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
@@ -82,7 +102,10 @@ namespace WebRepo
 
             var app = builder.Build();
 
-            app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            //app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+
+
+            app.UseCors("AllowAngularOrigin");
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -101,9 +124,11 @@ namespace WebRepo
 
             app.UseAuthentication();
 
-            app.UseSession();
+            //app.UseSession();
 
             app.UseAuthorization();
+
+            app.UseCustomAuth();
 
             app.MapDefaultControllerRoute();
 
