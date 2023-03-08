@@ -4,6 +4,7 @@ using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using WebRepo.App.Migrations;
 using WebRepo.DAL.Default;
 
 namespace WebRepo.DAL.Entities
@@ -18,6 +19,7 @@ namespace WebRepo.DAL.Entities
         public long ContentLength { get; set; }
         public bool isFavourite { get; set; }
         public virtual User User { get; set; }
+        public virtual VirtualDirectory? VirtualDirectory { get; set; }
 
         //// Optional properties for tracking who uploaded the file
         //public string UploadedBy { get; set; }

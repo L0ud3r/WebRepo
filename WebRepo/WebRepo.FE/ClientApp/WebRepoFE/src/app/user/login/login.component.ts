@@ -25,7 +25,7 @@ export class LoginComponent {
     this.service.login(this.conta).subscribe(
       data => {
         alert('Login successfully.')
-        console.log(data);
+        //console.log(data);
 
         /*console.log(name[0]);
         console.log(name[1]);

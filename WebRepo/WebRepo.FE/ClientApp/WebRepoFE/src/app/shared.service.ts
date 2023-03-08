@@ -12,12 +12,21 @@ export class SharedService {
 
   constructor(private http:HttpClient) { }
 
-  login(account:any):Observable<any>{
+  login(account : any):Observable<any>{
     return this.http.post<any>(this.APIUrl+'/User/login', account)
   }
 
-  filesByUser():Observable<any[]>{
-    return this.http.get<any>(this.APIUrl+'/File/list',  { headers: {Authorization: this.token} })
+  filesByUser(idCurrentFolder : number):Observable<any[]>{
+    return this.http.get<any>(this.APIUrl+'/File/list?idCurrentFolder=' + idCurrentFolder,  { headers: { Authorization: this.token } })
+  }
+
+  foldersByUser(idCurrentFolder : number):Observable<any[]>{
+    return this.http.get<any>(this.APIUrl+'/VirtualDirectory/folders?idCurrentFolder=' + idCurrentFolder,  { headers: { Authorization: this.token } })
+  }
+
+
+  favouriteFilesByUser():Observable<any[]>{
+    return this.http.get<any[]>(this.APIUrl+'/File/favourites',  { headers: {Authorization: this.token} })
   }
 
   uploadFile(file : any):Observable<any>{
@@ -28,6 +37,11 @@ export class SharedService {
     return this.http.get(this.APIUrl + '/File/downloadfile?filename=' + filename, {
       headers: { Authorization: this.token },
       responseType: 'blob'
+    });
+  }
+
+  addRemoveFavourites(id : number): Observable<any>{
+    return this.http.patch<any>(this.APIUrl + '/File/addremovefavourites', id, { headers: { Authorization: this.token }
     });
   }
 }

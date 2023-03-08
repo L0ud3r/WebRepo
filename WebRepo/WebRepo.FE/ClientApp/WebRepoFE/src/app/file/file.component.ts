@@ -9,14 +9,17 @@ import { SharedService } from '../shared.service';
 export class FileComponent {
 
   userFiles : any = []
+  userFolders : any = []
   userFilesPretty : any = []
   selectedFile: File | null
   selectedFileName: string = ""
   fileOn : boolean = false
+  currentFolder = 0
 
   constructor(private service : SharedService) { this.selectedFile = null; }
 
   ngOnInit(): void {
+    this.getUserFolders();
     this.getUserFiles();
   }
 
@@ -27,7 +30,7 @@ export class FileComponent {
   }
 
   getUserFiles() : void {
-    this.service.filesByUser().subscribe(
+    this.service.filesByUser(this.currentFolder).subscribe(
       data =>{
         this.userFiles = data;
         this.userFilesPretty = data;
@@ -51,7 +54,16 @@ export class FileComponent {
         }
     },
       error => {
-        alert("Erro");
+        this.userFilesPretty = null;
+    })
+  }
+
+  getUserFolders() : void {
+    this.service.foldersByUser(this.currentFolder).subscribe(
+      data =>{
+        this.userFolders = data
+    },
+      error => {
     })
   }
 
@@ -88,5 +100,20 @@ export class FileComponent {
       error => {
         alert("Error!")
     })
+  }
+
+  addRemoveFavourites(id : number) : void {
+    alert(id)
+    this.service.addRemoveFavourites(id).subscribe(
+      data => {
+        alert("Success!")
+      },
+      error => {
+        alert("Error!")
+      })
+  }
+
+  message(message : string) : void{
+    alert(message)
   }
 }

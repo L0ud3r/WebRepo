@@ -3,6 +3,7 @@ using WebRepo.App.Interfaces;
 using WebRepo.DAL.Entities;
 using WebRepo.Infra;
 using System.Security.Claims;
+using Microsoft.EntityFrameworkCore;
 
 namespace WebRepo.App.Services
 {
@@ -10,12 +11,14 @@ namespace WebRepo.App.Services
     {
         private readonly IRepository<FileBlob> _filesRepository;
         private readonly IRepository<User> _userRepository;
+        private readonly IRepository<VirtualDirectory> _virtualDirectoryRepository;
         //private readonly IHttpContextAccessor _httpContextAccessor;
 
-        public FileService(IRepository<FileBlob> filesRepository, IRepository<User> userRepository, IHttpContextAccessor httpContextAccessor)
+        public FileService(IRepository<FileBlob> filesRepository, IRepository<User> userRepository, IRepository<VirtualDirectory> virtualDirecotryRepository)
         {
             _filesRepository = filesRepository;
             _userRepository = userRepository;
+            _virtualDirectoryRepository = virtualDirecotryRepository;
             //_httpContextAccessor = httpContextAccessor;
         }
 
@@ -29,23 +32,31 @@ namespace WebRepo.App.Services
             return _filesRepository.Get().Where(x => x.FileIdentifier == fileIdentifier && x.Active == true).SingleOrDefault();
         }
 
-        public async Task<List<FileBlob>> GetByUser(string userEmail)
+        public async Task<List<FileBlob>> GetByUser(string userEmail, int idCurrentFolder)
         {
-            return _filesRepository.Get().Where(x => x.User.Email == userEmail && x.Active == true).ToList();
+            if (idCurrentFolder != 0)
+            {
+                return _filesRepository.Get().Where(x => x.User.Email == userEmail && x.VirtualDirectory.Id == idCurrentFolder && x.Active == true).ToList();
+            }
+
+            return _filesRepository.Get().Where(x => x.User.Email == userEmail && x.VirtualDirectory == null && x.Active == true).ToList();
+
         }
 
-        public async Task<List<FileBlob>> GetByFavourites(int idUser)
+        public async Task<List<FileBlob>> GetByFavourites(string userEmail)
         {
-            return _filesRepository.Get().Where(x => x.User.Id == idUser && x.isFavourite == true && x.Active == true).ToList();
+            return _filesRepository.Get().Where(x => x.User.Email == userEmail && x.isFavourite == true && x.Active == true).ToList();
         }
 
-        public async Task<FileBlob> PostFile(string fileIdentifier, string exactpath, string userEmail, IFormFile file)
+        public async Task<FileBlob> PostFile(string fileIdentifier, string exactpath, string userEmail, IFormFile file, int idCurrentFolder)
         {
             try
             {
                 FileBlob newFile = new FileBlob();
 
                 newFile.User = _userRepository.Get().Where(x => x.Email == userEmail).SingleOrDefault();
+
+
                 newFile.FileIdentifier = fileIdentifier;
                 newFile.FileName = file.FileName;
                 newFile.PathAPI = exactpath;
@@ -56,6 +67,11 @@ namespace WebRepo.App.Services
                 newFile.CreatedDate = DateTime.Now;
                 newFile.CreatedBy = 0;
                 newFile.isFavourite = false;
+
+                if (idCurrentFolder != 0)
+                    newFile.VirtualDirectory = await _virtualDirectoryRepository.Get().Where(x => x.Id == idCurrentFolder).SingleOrDefaultAsync();
+                else
+                    newFile.VirtualDirectory = null;
 
                 _filesRepository.Insert(newFile);
                 _filesRepository.Save();

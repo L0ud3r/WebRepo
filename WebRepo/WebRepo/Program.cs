@@ -34,9 +34,11 @@ namespace WebRepo
             builder.Services.AddScoped<IRepository<User>, Repository<User, WebRepoAppContext>>();
             builder.Services.AddScoped<IRepository<FileBlob>, Repository<FileBlob, WebRepoAppContext>>();
             builder.Services.AddScoped<IRepository<UserToken>, Repository<UserToken, WebRepoAppContext>>();
+            builder.Services.AddScoped<IRepository<VirtualDirectory>, Repository<VirtualDirectory, WebRepoAppContext>>();
 
             builder.Services.AddScoped<IFileService, FileService>();
             builder.Services.AddScoped<IUserService, UserService>();
+            builder.Services.AddScoped<IVirtualDirectoryService, VirtualDirectoryService>();
 
             builder.Services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
 

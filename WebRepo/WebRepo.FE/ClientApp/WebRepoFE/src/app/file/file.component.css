@@ -17,3 +17,9 @@
   text-overflow: ellipsis;
   max-width: 20ch;
 }
+
+.emptyWarning{
+  text-align: center;
+  margin-top: 5%;
+  font-size: 20px;
+}

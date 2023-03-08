@@ -68,12 +68,17 @@ namespace WebRepo.App.Migrations
                     b.Property<int>("UserId")
                         .HasColumnType("int");
 
+                    b.Property<int?>("VirtualDirectoryId")
+                        .HasColumnType("int");
+
                     b.Property<bool>("isFavourite")
                         .HasColumnType("bit");
 
                     b.HasKey("Id");
 
                     b.HasIndex("UserId");
+
+                    b.HasIndex("VirtualDirectoryId");
 
                     b.ToTable("Files");
                 });
@@ -157,7 +162,51 @@ namespace WebRepo.App.Migrations
 
                     b.HasKey("Id");
 
+                    b.HasIndex("UserId");
+
                     b.ToTable("UserTokens");
+                });
+
+            modelBuilder.Entity("WebRepo.DAL.Entities.VirtualDirectory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int");
+
+                    SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"));
+
+                    b.Property<bool>("Active")
+                        .HasColumnType("bit");
+
+                    b.Property<int>("CreatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("CreatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<string>("Name")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<int?>("ParentDirectoryId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("UpdatedBy")
+                        .HasColumnType("int");
+
+                    b.Property<DateTime>("UpdatedDate")
+                        .HasColumnType("datetime2");
+
+                    b.Property<int>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("ParentDirectoryId");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("VirtualDirectories");
                 });
 
             modelBuilder.Entity("WebRepo.DAL.Entities.FileBlob", b =>
@@ -168,12 +217,57 @@ namespace WebRepo.App.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
+                    b.HasOne("WebRepo.DAL.Entities.VirtualDirectory", "VirtualDirectory")
+                        .WithMany("FileBlobs")
+                        .HasForeignKey("VirtualDirectoryId");
+
+                    b.Navigation("User");
+
+                    b.Navigation("VirtualDirectory");
+                });
+
+            modelBuilder.Entity("WebRepo.DAL.Entities.UserToken", b =>
+                {
+                    b.HasOne("WebRepo.DAL.Entities.User", "User")
+                        .WithMany("UserTokens")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("WebRepo.DAL.Entities.VirtualDirectory", b =>
+                {
+                    b.HasOne("WebRepo.DAL.Entities.VirtualDirectory", "ParentDirectory")
+                        .WithMany("VirtualDirectories")
+                        .HasForeignKey("ParentDirectoryId");
+
+                    b.HasOne("WebRepo.DAL.Entities.User", "User")
+                        .WithMany("VirtualDirectories")
+                        .HasForeignKey("UserId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+
+                    b.Navigation("ParentDirectory");
+
                     b.Navigation("User");
                 });
 
             modelBuilder.Entity("WebRepo.DAL.Entities.User", b =>
                 {
                     b.Navigation("Files");
+
+                    b.Navigation("UserTokens");
+
+                    b.Navigation("VirtualDirectories");
+                });
+
+            modelBuilder.Entity("WebRepo.DAL.Entities.VirtualDirectory", b =>
+                {
+                    b.Navigation("FileBlobs");
+
+                    b.Navigation("VirtualDirectories");
                 });
 #pragma warning restore 612, 618
         }

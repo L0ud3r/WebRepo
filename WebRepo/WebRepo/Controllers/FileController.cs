@@ -13,14 +13,14 @@ namespace WebRepo.Controllers
     public class FileController : Controller
     {
 
-        private readonly IRepository<FileBlob> _filesRepository;
-        private readonly IRepository<User> _userRepository;
+        //private readonly IRepository<FileBlob> _filesRepository;
+        //private readonly IRepository<User> _userRepository;
         private readonly IFileService _fileService;
 
         public FileController(IRepository<FileBlob> filesRepository, IRepository<User> userRepository, IFileService fileService)
         {
-            _filesRepository = filesRepository;
-            _userRepository = userRepository;
+            //_filesRepository = filesRepository;
+            //_userRepository = userRepository;
             _fileService = fileService;
         }
 
@@ -36,7 +36,7 @@ namespace WebRepo.Controllers
         }
 
         [HttpGet("list")]
-        public async Task<IActionResult> GetbyUser()
+        public async Task<IActionResult> GetbyUser(int idCurrentFolder)
         {
             string userEmail = "";
 
@@ -45,21 +45,28 @@ namespace WebRepo.Controllers
             else
                 return new JsonResult(false) { StatusCode = 401, Value = "User not authenticated" };
 
-            var userFiles = await _fileService.GetByUser(userEmail);
+            var userFiles = await _fileService.GetByUser(userEmail, idCurrentFolder);
 
             if (userFiles.Count <= 0)
-                return new JsonResult(false) { StatusCode = 404, Value = "You don't have any files!" };
+                return new JsonResult(true) { StatusCode = 204, Value = "You don't have any files!" };
 
             return new JsonResult(userFiles);
         }
 
-        [HttpGet("favourites/{idUser}")]
-        public async Task<IActionResult> GetbyFavourites(int idUser)
+        [HttpGet("favourites")]
+        public async Task<IActionResult> GetbyFavourites()
         {
-            var userFavouriteFiles = await _fileService.GetByFavourites(idUser);
+            string userEmail = "";
+
+            if (User.Identity.IsAuthenticated)
+                userEmail = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value;
+            else
+                return new JsonResult(false) { StatusCode = 401, Value = "User not authenticated" };
+
+            var userFavouriteFiles = await _fileService.GetByFavourites(userEmail);
 
             if (userFavouriteFiles.Count <= 0)
-                return new JsonResult(false) { StatusCode = 404, Value = "You don't have any favourite files!" };
+                return new JsonResult(true) { StatusCode = 204, Value = "You don't have any favourite files!" };
 
             return new JsonResult(userFavouriteFiles);
         }
@@ -68,14 +75,14 @@ namespace WebRepo.Controllers
         [Route("uploadfile")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
-        public async Task<IActionResult> UploadFile(IFormFile file)
+        public async Task<IActionResult> UploadFile(IFormFile file, int idCurrentFolder)
         {
-            var result = await WriteFile(file);
+            var result = await WriteFile(file, idCurrentFolder);
 
             return Ok(result);
         }
 
-        private async Task<IActionResult> WriteFile(IFormFile file)
+        private async Task<IActionResult> WriteFile(IFormFile file, int idCurrentFolder)
         {
             string fileIdentifier = string.Empty;
             string userEmail = "";
@@ -103,7 +110,7 @@ namespace WebRepo.Controllers
                     await file.CopyToAsync(stream);
                 }
 
-                var newFile = await _fileService.PostFile(fileIdentifier, filepath, userEmail, file);
+                var newFile = await _fileService.PostFile(fileIdentifier, filepath, userEmail, file, idCurrentFolder);
 
                 if(newFile == null)
                     return new JsonResult(false) { StatusCode = 400, Value = "Error uploading file" };
@@ -135,8 +142,8 @@ namespace WebRepo.Controllers
             return File(bytes, contenttype, file.FileName);
         }
 
-        [HttpPatch("addremovefavourites/{id}")]
-        public async Task<IActionResult> AddRemoveFavourites(int id)
+        [HttpPatch("addremovefavourites")]
+        public async Task<IActionResult> AddRemoveFavourites([FromBody]int id)
         {
             var result = await _fileService.AddRemoveFavourites(id);
 

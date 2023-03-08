@@ -18,5 +18,6 @@ namespace WebRepo.App.Data
         public DbSet<User> Users { get; set; } = default!;
         public DbSet<FileBlob> Files { get; set; } = default!;
         public DbSet<UserToken> UserTokens { get; set; } = default!;
+        public DbSet<VirtualDirectory> VirtualDirectories { get; set; } = default!;
     }
 }
