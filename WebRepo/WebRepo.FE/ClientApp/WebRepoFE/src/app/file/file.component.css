@@ -1,0 +1,19 @@
+.file-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.file {
+  width: 16.666%;
+}
+
+.hovercustom:hover{
+  cursor: pointer;
+}
+
+.limitstring{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 20ch;
+}

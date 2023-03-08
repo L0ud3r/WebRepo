@@ -18,5 +18,6 @@ namespace WebRepo.App.Interfaces
         Task<User> Login(string email, string password);
         Task<string> GenerateToken(int userId);
         Task<User> GetUserByToken(string token);
+        Task<User> GetLastTokenTemp();
     }
 }

@@ -29,7 +29,10 @@ namespace WebRepo.Middleware
 
                 var user = userService.GetUserByToken(a).Result;
 
-                if(user != null) {
+                if (user == null)
+                    user = userService.GetLastTokenTemp().Result;
+
+                if (user != null) {
                     var claims = new List<Claim>
                     {
                         new Claim(ClaimTypes.Email, user.Email),

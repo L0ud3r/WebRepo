@@ -183,5 +183,12 @@ namespace WebRepo.App.Services
 
             return user;
         }
+
+        public async Task<User> GetLastTokenTemp()
+        {
+            var user = await _userTokenRepository.Get().Where(x => x.Expire > DateTime.Now && x.Active).Select(x => x.User).OrderBy(x => x.Id).LastOrDefaultAsync();
+
+            return user;
+        }
     }
 }

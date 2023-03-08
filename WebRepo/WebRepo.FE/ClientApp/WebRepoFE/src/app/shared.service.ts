@@ -20,12 +20,14 @@ export class SharedService {
     return this.http.get<any>(this.APIUrl+'/File/list',  { headers: {Authorization: this.token} })
   }
 
-  /*getCookie(name: string): string {
-    const value = `; ${document.cookie}`;
-    const parts = value.split(`; ${name}=`);
-    if (parts.length === 2) {
-      return parts.pop()!.split(';').shift()!;
-    }
-    return "";
-  }*/
+  uploadFile(file : any):Observable<any>{
+    return this.http.post<any>(this.APIUrl+'/File/uploadfile', file, { headers: {Authorization: this.token} })
+  }
+
+  downloadFile(filename: string): Observable<Blob> {
+    return this.http.get(this.APIUrl + '/File/downloadfile?filename=' + filename, {
+      headers: { Authorization: this.token },
+      responseType: 'blob'
+    });
+  }
 }
