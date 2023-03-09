@@ -55,10 +55,12 @@
       </div><!--//col-auto-->
     </div><!--//row-->
 
-    <div *ngIf="!userFilesPretty" class="emptyWarning"><br/>You don't have any files!</div>
+    <button *ngIf="currentFolder != 0" (click)="goToParentFolder(currentFolder)">Back</button>
+
+    <div *ngIf="!userFilesPretty" class="emptyWarning"><br/>You don't have any files here</div>
     <div class="file-grid">
       <div *ngFor="let folder of userFolders" class="col-6 col-md-4 col-xl-3 col-xxl-2 file">
-        <div class="app-card app-card-doc shadow-sm h-100">
+        <div class="app-card app-card-doc shadow-sm h-100"  (click)="changeFolder(folder.id)">
           <div class="app-card-thumb-holder p-3">
             <span class="icon-holder">
               <svg class="svg-inline--fa fa-file-lines text-file" aria-hidden="true" focusable="false" data-prefix="fas" data-icon="file-lines" role="img" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 384 512" data-fa-i2svg=""><path fill="currentColor"></path>

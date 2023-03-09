@@ -188,7 +188,7 @@ namespace WebRepo.App.Migrations
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
-                    b.Property<int?>("ParentDirectoryId")
+                    b.Property<int?>("ParentDirectory")
                         .HasColumnType("int");
 
                     b.Property<int?>("UpdatedBy")
@@ -201,8 +201,6 @@ namespace WebRepo.App.Migrations
                         .HasColumnType("int");
 
                     b.HasKey("Id");
-
-                    b.HasIndex("ParentDirectoryId");
 
                     b.HasIndex("UserId");
 
@@ -239,17 +237,11 @@ namespace WebRepo.App.Migrations
 
             modelBuilder.Entity("WebRepo.DAL.Entities.VirtualDirectory", b =>
                 {
-                    b.HasOne("WebRepo.DAL.Entities.VirtualDirectory", "ParentDirectory")
-                        .WithMany("VirtualDirectories")
-                        .HasForeignKey("ParentDirectoryId");
-
                     b.HasOne("WebRepo.DAL.Entities.User", "User")
                         .WithMany("VirtualDirectories")
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
-
-                    b.Navigation("ParentDirectory");
 
                     b.Navigation("User");
                 });
@@ -266,8 +258,6 @@ namespace WebRepo.App.Migrations
             modelBuilder.Entity("WebRepo.DAL.Entities.VirtualDirectory", b =>
                 {
                     b.Navigation("FileBlobs");
-
-                    b.Navigation("VirtualDirectories");
                 });
 #pragma warning restore 612, 618
         }

@@ -24,6 +24,9 @@ export class SharedService {
     return this.http.get<any>(this.APIUrl+'/VirtualDirectory/folders?idCurrentFolder=' + idCurrentFolder,  { headers: { Authorization: this.token } })
   }
 
+  getParentFolder(idCurrentFolder : number):Observable<any>{
+    return this.http.get<any>(this.APIUrl+'/VirtualDirectory/getparent?idCurrentFolder=' + idCurrentFolder,  { headers: { Authorization: this.token } })
+  }
 
   favouriteFilesByUser():Observable<any[]>{
     return this.http.get<any[]>(this.APIUrl+'/File/favourites',  { headers: {Authorization: this.token} })

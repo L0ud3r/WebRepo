@@ -46,5 +46,20 @@ namespace WebRepo.Controllers
 
             return new JsonResult(true) { StatusCode = 200, Value = userFolders };
         }
+
+        [HttpGet("getparent")]
+        public async Task<IActionResult> GetParentFolder(int idCurrentFolder)
+        {
+            string userEmail = "";
+
+            if (User.Identity.IsAuthenticated)
+                userEmail = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value;
+            else
+                return new JsonResult(false) { StatusCode = 401, Value = "User not authenticated" };
+
+            var parentFolderId = await _virtualDirectoryService.GetParentFolder(userEmail, idCurrentFolder);
+
+            return new JsonResult(true) { StatusCode = 200, Value = parentFolderId };
+        }
     }
 }

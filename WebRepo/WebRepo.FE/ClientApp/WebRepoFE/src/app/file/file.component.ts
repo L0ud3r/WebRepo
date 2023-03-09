@@ -14,13 +14,13 @@ export class FileComponent {
   selectedFile: File | null
   selectedFileName: string = ""
   fileOn : boolean = false
-  currentFolder = 0
+  currentFolder : number = 0;
 
   constructor(private service : SharedService) { this.selectedFile = null; }
 
   ngOnInit(): void {
-    this.getUserFolders();
-    this.getUserFiles();
+    this.getUserFolders(0);
+    this.getUserFiles(0);
   }
 
   onFileSelected(event : any) {
@@ -29,8 +29,28 @@ export class FileComponent {
     this.fileOn = true
   }
 
-  getUserFiles() : void {
-    this.service.filesByUser(this.currentFolder).subscribe(
+  goToParentFolder(idFolder : number) : void {
+    this.service.getParentFolder(idFolder).subscribe(
+      data => {
+        this.getUserFolders(data);
+        this.getUserFiles(data);
+        this.currentFolder = data;
+      },
+      error => {
+        alert("Something went wrong");
+      }
+    )
+
+  }
+
+  changeFolder(idFolder : number) : void{
+    this.getUserFolders(idFolder);
+    this.getUserFiles(idFolder);
+    this.currentFolder = idFolder;
+  }
+
+  getUserFiles(idFolder : number) : void {
+    this.service.filesByUser(idFolder).subscribe(
       data =>{
         this.userFiles = data;
         this.userFilesPretty = data;
@@ -58,12 +78,13 @@ export class FileComponent {
     })
   }
 
-  getUserFolders() : void {
-    this.service.foldersByUser(this.currentFolder).subscribe(
+  getUserFolders(idFolder : number) : void {
+    this.service.foldersByUser(idFolder).subscribe(
       data =>{
         this.userFolders = data
     },
       error => {
+        this.userFolders = null;
     })
   }
 

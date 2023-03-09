@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -32,10 +33,21 @@ namespace WebRepo.App.Services
         {
             if(idCurrentFolder != 0)
             {
-                return _virtualDirectoryRepository.Get().Where(x => x.User.Email == userEmail && x.ParentDirectory.Id == idCurrentFolder && x.Active == true).ToList();
+                return _virtualDirectoryRepository.Get().Where(x => x.User.Email == userEmail && x.ParentDirectory == idCurrentFolder && x.Active == true).ToList();
             }
 
             return _virtualDirectoryRepository.Get().Where(x => x.User.Email == userEmail && x.ParentDirectory == null && x.Active == true).ToList();
+        }
+
+        public async Task<int> GetParentFolder(string userEmail, int idCurrentFolder)
+        {
+            var currentFolder = await _virtualDirectoryRepository.Get().Where(x => x.Id == idCurrentFolder).SingleOrDefaultAsync();
+
+            if (idCurrentFolder == 0 || currentFolder.ParentDirectory == null) return 0;
+
+            var parentFolder = await _virtualDirectoryRepository.Get().Where(x => x.Id == currentFolder.ParentDirectory).SingleOrDefaultAsync();
+
+            return parentFolder.Id;
         }
     }
 }
