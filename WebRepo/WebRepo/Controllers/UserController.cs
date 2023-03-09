@@ -51,6 +51,16 @@ namespace WebRepo.Controllers
             return new JsonResult(user);
         }
 
+        [HttpGet("token")]
+        public async Task<IActionResult> GetUserByToken()
+        {
+            var token = HttpContext.Request.Headers.Authorization.FirstOrDefault();
+
+            var userInfo = _userService.GetUserByToken(token).Result;
+
+            return new JsonResult(userInfo);
+        }
+
         [HttpPost]
         public async Task<IActionResult> Create([Bind("Username, Email, Password")] UserViewModel user)
         {

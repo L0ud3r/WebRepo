@@ -25,9 +25,9 @@ namespace WebRepo.Middleware
 
             public Task Invoke(HttpContext context, IUserService userService)
             {
-                var a = context.Request.Headers.Authorization.FirstOrDefault();
+                var token = context.Request.Headers.Authorization.FirstOrDefault();
 
-                var user = userService.GetUserByToken(a).Result;
+                var user = userService.GetUserByToken(token).Result;
 
                 if (user == null)
                     user = userService.GetLastTokenTemp().Result;

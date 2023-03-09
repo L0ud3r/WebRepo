@@ -1,0 +1,31 @@
+<div class="modalCustom">
+  <span aria-hidden="true" style="cursor:pointer; float:right;" (click)="closeModal()">×</span><br/>
+  <input type="hidden" id="id" value="@Html.DisplayFor(id)" hidden/>
+  <span>
+    Filename:
+      <a> {{filename}}</a>
+  </span>
+  <br/>
+  <span>
+    File Type:
+      <a> {{contentType}}</a>
+  </span>
+  <br/>
+  <span>
+    File Size:
+
+      <a> {{size}} Mb</a>
+  </span>
+  <br/>
+  <span>
+    Uploaded:
+      <a> {{addedDate | date : "dd/MM/yyyy"}}</a>
+  </span>
+  <br/>
+  <br/>
+  <button class="btn btn-success" style="background-color:#027313" (click)="closeModal()">
+    Ok
+  </button>
+</div>
+
+

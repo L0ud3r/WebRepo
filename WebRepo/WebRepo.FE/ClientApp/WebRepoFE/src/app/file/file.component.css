@@ -3,7 +3,7 @@
   flex-wrap: wrap;
   gap: 10px;
 }
-.file {
+.file-size {
   width: 16.666%;
 }
 
@@ -22,4 +22,8 @@
   text-align: center;
   margin-top: 5%;
   font-size: 20px;
+}
+
+.modalCustomPointer:hover{
+  cursor:pointer;
 }

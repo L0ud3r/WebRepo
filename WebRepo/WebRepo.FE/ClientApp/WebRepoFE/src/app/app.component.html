@@ -25,7 +25,7 @@
               <ul class="dropdown-menu" aria-labelledby="user-dropdown-toggle">
                 <li><a class="dropdown-item" routerLink="account">Account</a></li>
                 <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" href="login.html">Log Out</a></li>
+                <li><a class="dropdown-item" routerLink="/login">Log Out</a></li>
         </ul>
             </div><!--//app-user-dropdown-->
           </div><!--//app-utilities-->
@@ -36,9 +36,11 @@
   <div id="app-sidepanel" class="app-sidepanel">
     <div id="sidepanel-drop" class="sidepanel-drop"></div>
     <div class="sidepanel-inner d-flex flex-column">
-      <div class="app-branding">
-          <a class="app-logo" href="#"><img class="logo-icon me-2" src="../assets/img/app-logo.svg" alt="logo">
-            </a><span class="nav-link-text" style="color: rgb(0, 126, 0);font-size: 1.25rem;font-weight: 600;vertical-align: middle;">WebRepo</span>
+      <div class="app-branding customHover"  routerLink="/content">
+          <a class="app-logo" >
+            <img class="logo-icon me-2" src="../assets/img/app-logo.svg" alt="logo">
+            </a>
+            <span  class="nav-link-text" style="color: rgb(0, 126, 0);font-size: 1.25rem;font-weight: 600;vertical-align: middle;">WebRepo</span>
 
       </div><!--//app-branding-->
 
