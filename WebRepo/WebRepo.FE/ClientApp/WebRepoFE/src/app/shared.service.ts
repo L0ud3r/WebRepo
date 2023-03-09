@@ -16,8 +16,8 @@ export class SharedService {
     return this.http.post<any>(this.APIUrl+'/User/login', account)
   }
 
-  getUserbyToken():Observable<any[]>{
-    return this.http.get<any>(this.APIUrl+'/User/token', { headers: { Authorization: this.token } })
+  getUserbyEmail():Observable<any[]>{
+    return this.http.get<any>(this.APIUrl+'/User/email', { headers: { Authorization: this.token } })
   }
 
   filesByUser(idCurrentFolder : number):Observable<any[]>{

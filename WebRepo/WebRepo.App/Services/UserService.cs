@@ -15,6 +15,7 @@ using Microsoft.AspNetCore.Authentication;
 using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using WebRepo.App.Interfaces;
+using Newtonsoft.Json.Linq;
 
 namespace WebRepo.App.Services
 {
@@ -180,6 +181,12 @@ namespace WebRepo.App.Services
         public async Task<User> GetUserByToken(string token)
         {
             var user = await _userTokenRepository.Get().Where(x => x.Token == token && x.Expire > DateTime.Now && x.Active).Select(x => x.User).SingleOrDefaultAsync();
+
+            return user;
+        }
+
+        public async Task<User> GetUserByEmail(string userEmail) {
+            var user = await _userRepository.Get().Where(x => x.Email == userEmail && x.Active).SingleOrDefaultAsync();
 
             return user;
         }

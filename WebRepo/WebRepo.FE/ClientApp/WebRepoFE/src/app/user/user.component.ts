@@ -21,7 +21,7 @@ export class UserComponent {
   }
 
   userInfo(): void {
-    this.service.getUserbyToken().subscribe(
+    this.service.getUserbyEmail().subscribe(
       data => {
         this.account = data;
         console.log(this.account)

@@ -51,12 +51,20 @@ namespace WebRepo.Controllers
             return new JsonResult(user);
         }
 
-        [HttpGet("token")]
-        public async Task<IActionResult> GetUserByToken()
+        [HttpGet("email")]
+        public async Task<IActionResult> GetUserByEmail()
         {
-            var token = HttpContext.Request.Headers.Authorization.FirstOrDefault();
+            string userEmail = "";
 
-            var userInfo = _userService.GetUserByToken(token).Result;
+            if (User.Identity.IsAuthenticated)
+                userEmail = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value;
+            else
+                return new JsonResult(false) { StatusCode = 401, Value = "User not authenticated" };
+
+            var userInfo = _userService.GetUserByEmail(userEmail).Result;
+
+            if (userInfo == null)
+                return new JsonResult(true) { StatusCode = 404, Value = "User not found" };
 
             return new JsonResult(userInfo);
         }
