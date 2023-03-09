@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { SharedService } from '../shared.service';
 import { MatDialog } from '@angular/material/dialog';
+import { NgxFileDropEntry, FileSystemFileEntry, FileSystemDirectoryEntry } from 'ngx-file-drop';
 import { DetailsComponent } from './details/details.component';
 
 @Component({
@@ -10,6 +11,7 @@ import { DetailsComponent } from './details/details.component';
 })
 export class FileComponent {
 
+  public files: NgxFileDropEntry[] = [];
   userFiles : any = []
   userFolders : any = []
   userFilesPretty : any = []
@@ -26,6 +28,33 @@ export class FileComponent {
         this.dialogReference.open(DetailsComponent, {data : this.userFiles[i]})
       }
     }
+  }
+
+  public dropped(event: any) {
+    let files: NgxFileDropEntry[] = event.files;
+
+    for (const droppedFile of files) {
+
+      // Is it a file?
+      if (droppedFile.fileEntry.isFile) {
+        const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
+        fileEntry.file((file: File) => {
+          this.selectedFile = file;
+        });
+      } else {
+        // It was a directory (empty directories are added, otherwise only files)
+        const fileEntry = droppedFile.fileEntry as FileSystemDirectoryEntry;
+        console.log(droppedFile.relativePath, fileEntry);
+      }
+    }
+  }
+
+  public fileOver(event:any){
+    console.log(event);
+  }
+
+  public fileLeave(event:any){
+    console.log(event);
   }
 
   ngOnInit(): void {
@@ -80,6 +109,7 @@ export class FileComponent {
 
           this.userFilesPretty[i].contentLength = parseInt(Math.round(this.userFilesPretty[i].contentLength / 1000).toString())
 
+          /*
           // Assuming your backend returns the created date as a string
           const createdDateString = this.userFilesPretty[i].createdDate;
           const createdDate = new Date(createdDateString);
@@ -106,7 +136,7 @@ export class FileComponent {
             this.userFilesPretty[i].createdDate = `${diffMinutes} minute${diffMinutes > 1 ? 's' : ''} ago`;
           } else {
             this.userFilesPretty[i].createdDate = `${diffSeconds} second${diffSeconds > 1 ? 's' : ''} ago`;
-          }
+          }*/
         }
     },
       error => {

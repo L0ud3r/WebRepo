@@ -33,6 +33,7 @@ import { MdbTooltipModule } from 'mdb-angular-ui-kit/tooltip';
 import { MdbValidationModule } from 'mdb-angular-ui-kit/validation';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DetailsComponent } from './file/details/details.component';
+import { NgxFileDropModule } from 'ngx-file-drop';
 
 @NgModule({
   declarations: [
@@ -50,6 +51,7 @@ import { DetailsComponent } from './file/details/details.component';
     NgbAlertModule,
     FormsModule,
     HttpClientModule,
+    NgxFileDropModule,
     AppRoutingModule,
     MatDialogModule,
     NgbPaginationModule,

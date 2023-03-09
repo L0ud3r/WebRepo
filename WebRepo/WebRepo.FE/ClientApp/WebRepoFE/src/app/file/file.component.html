@@ -1,4 +1,4 @@
-<div class="app-content pt-3 p-md-3 p-lg-4">
+<div class="app-content pt-3 p-md-3 p-lg-4 h-100">
   <div class="container-xl">
     <div class="row g-3 mb-4 align-items-center justify-content-between">
       <div class="col-auto">
@@ -13,10 +13,9 @@
                             <input type="text" id="search-docs" name="searchdocs" class="form-control search-docs" placeholder="Search">
                         </div>
                         <div class="col-auto">
-                            <button type="submit" class="btn app-btn-secondary">Search</button>
+                            <button type="submit" class="btn app-btn-secondary" for="fileInput2">Search</button>
                         </div>
                     </form>
-
             </div><!--//col-->
             <div class="col-auto">
 
@@ -64,6 +63,14 @@
     </a>
 
     <div *ngIf="!userFilesPretty && !userFolders" class="emptyWarning"><br/>You don't have any files here</div>
+    <div>
+      <label>Upload Files here:</label>
+      <br/>
+      <br/>
+      <ngx-file-drop dropZoneLabel="Drop files here" (onFileDrop)="dropped($event)"
+      (onFileOver)="fileOver($event)" (onFileLeave)="fileLeave($event)"></ngx-file-drop>
+      <br/>
+    </div>
     <div class="file-grid">
       <div *ngFor="let folder of userFolders" class="file-size col-6 col-md-4 col-xl-3 col-xxl-2">
         <div class="app-card app-card-doc shadow-sm h-100">
