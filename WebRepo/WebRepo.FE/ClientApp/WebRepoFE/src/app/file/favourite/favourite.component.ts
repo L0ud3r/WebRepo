@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { SharedService } from 'src/app/shared.service';
+import { FolderNavigationService } from '../folder-navigation.service';
 
 @Component({
   selector: 'app-favourite',
@@ -12,8 +13,24 @@ export class FavouriteComponent {
   selectedFile: File | null
   selectedFileName: string = ""
   fileOn : boolean = false
+  modelFiles = {
+    offset: 0,
+    limit: 0,
+    userEmail: "pedro@gmail.com",
+    searchParameter: [
+      {
+        fieldName: "Filename",
+        fieldValue: ""
+      },
+      {
+        fieldName: "Filetype",
+        fieldValue: ""
+      }
+    ]
+  }
+  types : any = ["image/jpeg", "Folder"]
 
-  constructor(private service : SharedService) { this.selectedFile = null; }
+  constructor(private service : SharedService, private folderService : FolderNavigationService) { this.selectedFile = null; }
 
   ngOnInit(): void {
     this.favouriteFilesByUser();
@@ -23,6 +40,43 @@ export class FavouriteComponent {
     this.selectedFile = <File>event.target.files[0]
     this.selectedFileName = this.selectedFile.name
     this.fileOn = true
+  }
+
+  paginateFavouritesFiles() : void {
+    if(this.modelFiles.searchParameter[1].fieldValue == 'All Types')
+      this.modelFiles.searchParameter[1].fieldValue = ''
+
+    if(this.modelFiles.searchParameter[1].fieldValue == '' && this.modelFiles.searchParameter[0].fieldValue == ''){
+      this.favouriteFilesByUser();
+    }
+    else{
+      this.service.paginateFavouriteFiles(this.modelFiles).subscribe(
+        data => {
+          console.log(data)
+          this.userFiles = data.rows;
+          this.userFilesPretty = data.rows;
+
+          for(let i = 0; i < this.userFilesPretty.length; i++){
+            if(this.userFilesPretty[i].contentType == "application/vnd.openxmlformats-officedocument.presentationml.presentation")
+              this.userFilesPretty[i].contentType = "PowerPoint"
+              else if(this.userFilesPretty[i].contentType == "image/jpg")
+              this.userFilesPretty[i].contentType = "JPG"
+            else if(this.userFilesPretty[i].contentType == "image/jpeg")
+              this.userFilesPretty[i].contentType = "JPEG"
+            else if(this.userFilesPretty[i].contentType == "image/png")
+              this.userFilesPretty[i].contentType = "PNG"
+            else if(this.userFilesPretty[i].contentType == "application/pdf")
+              this.userFilesPretty[i].contentType = "PDF"
+            else if(this.userFilesPretty[i].contentType == "plain/text")
+              this.userFilesPretty[i].contentType = "Text"
+
+            this.userFilesPretty[i].contentLength = parseInt(Math.round(this.userFilesPretty[i].contentLength / 1000).toString())
+          }
+      },
+        error => {
+          this.userFilesPretty = null
+      })
+    }
   }
 
   favouriteFilesByUser() : void {
@@ -58,7 +112,7 @@ export class FavouriteComponent {
     const formData = new FormData();
     formData.append('file', this.selectedFile!, this.selectedFile!.name);
 
-    this.service.uploadFile(formData).subscribe(
+    this.service.uploadFile(formData, this.folderService.currentFolder).subscribe(
       data => {
         alert("Success!")
         location.reload();
@@ -90,7 +144,6 @@ export class FavouriteComponent {
   }
 
   addRemoveFavourites(id : number) : void {
-    alert(id)
     this.service.addRemoveFavourites(id).subscribe(
       data => {
         alert("Success!")
