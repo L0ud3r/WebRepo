@@ -1,0 +1,41 @@
+.file-grid {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+}
+.file-size {
+  width: 16.666%;
+}
+
+.hovercustom:hover{
+  cursor: pointer;
+}
+
+.limitstring{
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 20ch;
+}
+
+.emptyWarning{
+  text-align: center;
+  margin-top: 5%;
+  font-size: 20px;
+}
+
+.modalCustomPointer:hover{
+  cursor:pointer;
+}
+
+.file-container{
+  border: 4px solid black;
+  width: 300px;
+}
+
+.file{
+  opacity: 0;
+  padding: 5rem;
+  width:auto;
+  height:auto;
+}

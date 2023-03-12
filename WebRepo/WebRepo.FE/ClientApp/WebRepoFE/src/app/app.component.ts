@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { SharedService } from './shared.service';
 import { FileComponent } from './file/file.component';
 import { Inject } from '@angular/core';
+import { FolderNavigationService } from './file/folder-navigation.service';
 
 @Component({
   selector: 'app-root',
@@ -16,7 +17,9 @@ export class AppComponent {
   contextMenuY : number | null;
   showContextMenu : boolean;
 
-  constructor(private router: Router, private service : SharedService, @Inject(FileComponent) public fileComponent : FileComponent) {
+  constructor(private router: Router, private service : SharedService,
+     private folderService : FolderNavigationService,
+     @Inject(FileComponent) public fileComponent : FileComponent) {
     this.contextMenuX = 0;
     this.contextMenuY = 0;
     this.showContextMenu = false;
@@ -54,6 +57,6 @@ export class AppComponent {
   }
 
   addFolder() : void{
-    this.fileComponent.addFolder(this.service.currentFolder);
+    this.fileComponent.addFolder(this.folderService.currentFolder);
   }
 }

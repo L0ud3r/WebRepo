@@ -72,9 +72,9 @@ namespace WebRepo.Controllers
         [HttpPost]
         public async Task<IActionResult> Create([Bind("Username, Email, Password")] UserViewModel user)
         {
-            if(_userRepository.Get().Where(x => x.Username == user.Username) != null)
+            if(_userRepository.Get().Where(x => x.Username == user.Username).SingleOrDefault() != null)
                 return new JsonResult(false) { StatusCode = 400, Value = "Username already exists!" };
-            else if (_userRepository.Get().Where(x => x.Email == user.Email) != null)
+            else if (_userRepository.Get().Where(x => x.Email == user.Email).SingleOrDefault() != null)
                  return new JsonResult(false) { StatusCode = 400, Value = "Email already exists!" };
 
             User newUser = new User();

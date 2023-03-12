@@ -27,6 +27,11 @@ namespace WebRepo.App.Services
             return _filesRepository.Get().Where(x => x.Active == true).ToList();
         }
 
+        public IEnumerable<FileBlob> GetAllByUser(string userEmail)
+        {
+            return _filesRepository.Get().Where(x => x.Active == true && x.User.Email == userEmail).AsEnumerable();
+        }
+
         public async Task<FileBlob> GetFileByIdentifier(string fileIdentifier)
         {
             return _filesRepository.Get().Where(x => x.FileIdentifier == fileIdentifier && x.Active == true).SingleOrDefault();
@@ -46,6 +51,11 @@ namespace WebRepo.App.Services
         public async Task<List<FileBlob>> GetByFavourites(string userEmail)
         {
             return _filesRepository.Get().Where(x => x.User.Email == userEmail && x.isFavourite == true && x.Active == true).ToList();
+        }
+
+        public IEnumerable<FileBlob> GetByFavouritesEnum(string userEmail)
+        {
+            return _filesRepository.Get().Where(x => x.User.Email == userEmail && x.isFavourite == true && x.Active == true).AsEnumerable();
         }
 
         public async Task<FileBlob> PostFile(string fileIdentifier, string exactpath, string userEmail, IFormFile file, int idCurrentFolder)
@@ -84,6 +94,36 @@ namespace WebRepo.App.Services
             }
         }
     
+        public async Task<FileBlob> PatchFile(int fileId, string fileName)
+        {
+            var file = await _filesRepository.Get().Where(x => x.Id == fileId).SingleOrDefaultAsync();
+
+            if (_filesRepository.Exists(fileId) == false)
+                return null;
+
+            file.FileName = fileName;
+
+            _filesRepository.Update(file);
+            _filesRepository.Save();
+
+            return file;
+        }
+
+        public async Task<FileBlob> DeleteRecoverFile(int fileId, string fileName)
+        {
+            var file = await _filesRepository.Get().Where(x => x.Id == fileId).SingleOrDefaultAsync();
+
+            if (_filesRepository.Exists(fileId) == false)
+                return null;
+
+            file.Active = !file.Active;
+
+            _filesRepository.Update(file);
+            _filesRepository.Save();
+
+            return file;
+        }
+
         public async Task<bool> AddRemoveFavourites(int id)
         {
             try
@@ -105,6 +145,11 @@ namespace WebRepo.App.Services
             {
                 return false;
             }
+        }
+
+        public async Task<List<FileBlob>> GetDeletedFiles(string userEmail)
+        {
+            return _filesRepository.Get().Where(x => x.Active == false && x.User.Email == userEmail).ToList();
         }
     }
 }

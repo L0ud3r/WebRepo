@@ -8,12 +8,13 @@ namespace WebRepo.App.Interfaces
         Task<List<FileBlob>> Get();
         Task<FileBlob> GetFileByIdentifier(string fileIdentifier);
         Task<List<FileBlob>> GetByUser(string userEmail, int idCurrentFolder);
+        IEnumerable<FileBlob> GetAllByUser(string userEmail);
         Task<List<FileBlob>> GetByFavourites(string userEmail);
         Task<FileBlob> PostFile(string fileIdentifier, string exactpath, string userEmail, IFormFile file, int idCurrentFolder);
+        Task<FileBlob> PatchFile(int fileId, string fileName);
+        Task<FileBlob> DeleteRecoverFile(int fileId, string fileName);
         Task<bool> AddRemoveFavourites(int id);
-        Task<List<FileBlob>> Paginate(string userEmail, string filename, string filetype);
-        Task<List<FileBlob>> DeleteFile(string userEmail, int idFile);
-        Task<List<FileBlob>> RecoverFile(string userEmail, int idFile);
         Task<List<FileBlob>> GetDeletedFiles(string userEmail);
+        IEnumerable<FileBlob> GetByFavouritesEnum(string userEmail);
     }
 }

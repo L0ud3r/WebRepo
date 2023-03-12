@@ -1,8 +1,9 @@
-import { Component } from '@angular/core';
+import { Component, HostListener } from '@angular/core';
 import { SharedService } from '../shared.service';
 import { MatDialog } from '@angular/material/dialog';
 import { NgxFileDropEntry, FileSystemFileEntry, FileSystemDirectoryEntry } from 'ngx-file-drop';
 import { DetailsComponent } from './details/details.component';
+import { FolderNavigationService } from './folder-navigation.service';
 
 @Component({
   selector: 'app-file',
@@ -23,8 +24,34 @@ export class FileComponent {
     Name: "",
     IdCurrentDirectory: 0
   }
+  edditedFile : any = {
+    id: 0,
+    fileName: ""
+  }
 
-  constructor(private service : SharedService, private dialogReference : MatDialog) { this.selectedFile = null; }
+  edditedFolder : any = {
+    name: "",
+    idCurrentDirectory: 0
+  }
+
+  modelFiles = {
+    offset: 0,
+    limit: 0,
+    userEmail: "pedro@gmail.com",
+    searchParameter: [
+      {
+        fieldName: "Filename",
+        fieldValue: ""
+      },
+      {
+        fieldName: "Filetype",
+        fieldValue: ""
+      }
+    ]
+  }
+  types : any = ["image/jpeg", "Folder"]
+
+  constructor(private service : SharedService, private folderService : FolderNavigationService, private dialogReference : MatDialog) { this.selectedFile = null; }
 
   openModal(file:any){
     for(let i = 0; i < this.userFiles.length; i++){
@@ -78,6 +105,7 @@ export class FileComponent {
         this.getUserFolders(data);
         this.getUserFiles(data);
         this.currentFolder = data;
+        this.folderService.currentFolder = data;
       },
       error => {
         alert("Something went wrong");
@@ -89,7 +117,7 @@ export class FileComponent {
     this.getUserFolders(idFolder);
     this.getUserFiles(idFolder);
     this.currentFolder = idFolder;
-    this.service.currentFolder = idFolder;
+    this.folderService.currentFolder = idFolder;
   }
 
   getUserFiles(idFolder : number) : void {
@@ -142,12 +170,73 @@ export class FileComponent {
           } else {
             this.userFilesPretty[i].createdDate = `${diffSeconds} second${diffSeconds > 1 ? 's' : ''} ago`;
           }*/
-
         }
     },
       error => {
         this.userFilesPretty = null;
     })
+  }
+
+  paginateFiles() : void {
+    if(this.modelFiles.searchParameter[1].fieldValue == 'All Types')
+      this.modelFiles.searchParameter[1].fieldValue = ''
+
+    if(this.modelFiles.searchParameter[1].fieldValue == '' && this.modelFiles.searchParameter[0].fieldValue == ''){
+      this.getUserFiles(0);
+      this.getUserFolders(0);
+    }
+    else{
+      this.service.paginateFiles(this.modelFiles).subscribe(
+        data => {
+          console.log(data)
+          this.userFiles = data.rows;
+          this.userFilesPretty = data.rows;
+
+          for(let i = 0; i < this.userFilesPretty.length; i++){
+            if(this.userFilesPretty[i].contentType == "application/vnd.openxmlformats-officedocument.presentationml.presentation")
+              this.userFilesPretty[i].contentType = "PowerPoint"
+              else if(this.userFilesPretty[i].contentType == "image/jpg")
+              this.userFilesPretty[i].contentType = "JPG"
+            else if(this.userFilesPretty[i].contentType == "image/jpeg")
+              this.userFilesPretty[i].contentType = "JPEG"
+            else if(this.userFilesPretty[i].contentType == "image/png")
+              this.userFilesPretty[i].contentType = "PNG"
+            else if(this.userFilesPretty[i].contentType == "application/pdf")
+              this.userFilesPretty[i].contentType = "PDF"
+            else if(this.userFilesPretty[i].contentType == "plain/text")
+              this.userFilesPretty[i].contentType = "Text"
+
+            this.userFilesPretty[i].contentLength = parseInt(Math.round(this.userFilesPretty[i].contentLength / 1000).toString())
+          }
+      },
+        error => {
+          this.userFilesPretty = null
+      })
+    }
+  }
+
+  paginateFolders() : void {
+    if(this.modelFiles.searchParameter[1].fieldValue == 'All Types')
+      this.modelFiles.searchParameter[1].fieldValue = ''
+
+    if(this.modelFiles.searchParameter[1].fieldValue == '' && this.modelFiles.searchParameter[0].fieldValue == ''){
+      this.getUserFiles(0);
+      this.getUserFolders(0);
+    }
+    else{
+      this.service.paginateFolders(this.modelFiles).subscribe(
+        data => {
+          this.userFolders = data.rows
+      },
+        error => {
+          this.userFolders = null
+      })
+    }
+  }
+
+  paginate() : void {
+    this.paginateFiles()
+    this.paginateFolders()
   }
 
   getUserFolders(idFolder : number) : void {
@@ -164,7 +253,7 @@ export class FileComponent {
     const formData = new FormData();
     formData.append('file', this.selectedFile!, this.selectedFile!.name);
 
-    this.service.uploadFile(formData).subscribe(
+    this.service.uploadFile(formData, this.folderService.currentFolder).subscribe(
       data => {
         alert("Success!")
         location.reload();
@@ -196,7 +285,6 @@ export class FileComponent {
   }
 
   addRemoveFavourites(id : number) : void {
-    alert(id)
     this.service.addRemoveFavourites(id).subscribe(
       data => {
         alert("Success!")
@@ -221,6 +309,65 @@ export class FileComponent {
       },
       error => {
         alert("Error!")
+    })
+  }
+
+  changeFilename(file : any) : void {
+    file.fileName = 'PowerPoint Eddited'
+
+    this.edditedFile.id = file.id
+    this.edditedFile.fileName = file.fileName
+
+    this.service.patchFile(this.edditedFile).subscribe(
+      data => {
+        alert("File renamed!")
+        this.getUserFolders(this.currentFolder);
+        this.getUserFiles(this.currentFolder);
+    },
+      error=>{
+        alert("Error on changing filename")
+        this.getUserFolders(this.currentFolder);
+        this.getUserFiles(this.currentFolder);
+        console.log(error)
+    })
+  }
+
+  changeFoldername(folder : any) : void {
+    folder.name = 'Folder Renamed'
+
+    this.edditedFolder.idCurrentDirectory = folder.id
+    this.edditedFolder.name = folder.name
+
+    this.service.patchFolder(this.edditedFolder).subscribe(
+      data => {
+        alert("Folder renamed!")
+        this.getUserFolders(this.currentFolder);
+        this.getUserFiles(this.currentFolder);
+    },
+      error=>{
+        alert("Error on changing folder name")
+        this.getUserFolders(this.currentFolder);
+        this.getUserFiles(this.currentFolder);
+        console.log(error)
+    })
+  }
+
+  deleteFile(file : any) : void {
+
+    this.edditedFile.id = file.id
+    this.edditedFile.fileName = file.fileName
+
+    this.service.deleteRecoverFile(this.edditedFile).subscribe(
+      data => {
+        alert("File deleted")
+        this.getUserFolders(this.currentFolder);
+        this.getUserFiles(this.currentFolder);
+    },
+      error => {
+        alert("Error on deleting file")
+        this.getUserFolders(this.currentFolder);
+        this.getUserFiles(this.currentFolder);
+        console.log(error)
     })
   }
 

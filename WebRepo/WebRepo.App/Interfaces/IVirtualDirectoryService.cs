@@ -13,5 +13,7 @@ namespace WebRepo.App.Interfaces
         Task<List<VirtualDirectory>> GetByUser(string userEmail, int idCurrentFolder);
         Task<int> GetParentFolder(string userEmail, int idCurrentFolder);
         Task<VirtualDirectory> AddFolder(string userEmail, int idCurrentFolder, string filename);
+        IEnumerable<VirtualDirectory> GetAllByUser(string userEmail);
+        Task<VirtualDirectory> PatchFolder(int idCurrentDirectory, string name);
     }
 }

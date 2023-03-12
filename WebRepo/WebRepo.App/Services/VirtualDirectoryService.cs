@@ -31,7 +31,7 @@ namespace WebRepo.App.Services
 
         public async Task<List<VirtualDirectory>> GetByUser(string userEmail, int idCurrentFolder)
         {
-            if(idCurrentFolder != 0)
+            if (idCurrentFolder != 0)
             {
                 return _virtualDirectoryRepository.Get().Where(x => x.User.Email == userEmail && x.ParentDirectory == idCurrentFolder && x.Active == true).ToList();
             }
@@ -58,14 +58,13 @@ namespace WebRepo.App.Services
             if (user == null)
                 return null;
 
-            //Add Attributes
             newFolder.User = user;
 
-            int idParent = await GetParentFolder(userEmail, idCurrentFolder);
+            var currentDirectory = await _virtualDirectoryRepository.Get().Where(x => x.Id == idCurrentFolder).SingleOrDefaultAsync();
 
-            if (idCurrentFolder == 0 || idParent == 0) newFolder.ParentDirectory = null;
-            else newFolder.ParentDirectory = idParent;
-            
+            if (currentDirectory == null) newFolder.ParentDirectory = null;
+            else newFolder.ParentDirectory = idCurrentFolder;
+
             newFolder.Active = true;
             newFolder.CreatedDate = DateTime.Now;
             newFolder.UpdatedDate = DateTime.Now;
@@ -76,6 +75,26 @@ namespace WebRepo.App.Services
             _virtualDirectoryRepository.Save();
 
             return await _virtualDirectoryRepository.Get().OrderBy(x => x.CreatedDate).LastOrDefaultAsync();
+        }
+
+        public IEnumerable<VirtualDirectory> GetAllByUser(string userEmail)
+        {
+            return _virtualDirectoryRepository.Get().Where(x => x.Active == true && x.User.Email == userEmail).AsEnumerable();
+        }
+
+        public async Task<VirtualDirectory> PatchFolder(int idCurrentDirectory, string name)
+        {
+            var folder = await _virtualDirectoryRepository.Get().Where(x => x.Id == idCurrentDirectory).SingleOrDefaultAsync();
+
+            if (_virtualDirectoryRepository.Exists(idCurrentDirectory) == false)
+                return null;
+
+            folder.Name = name;
+
+            _virtualDirectoryRepository.Update(folder);
+            _virtualDirectoryRepository.Save();
+
+            return folder;
         }
     }
 }
