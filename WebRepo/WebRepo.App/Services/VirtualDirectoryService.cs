@@ -49,5 +49,33 @@ namespace WebRepo.App.Services
 
             return parentFolder.Id;
         }
+
+        public async Task<VirtualDirectory> AddFolder(string userEmail, int idCurrentFolder, string filename)
+        {
+            VirtualDirectory newFolder = new VirtualDirectory();
+            User user = await _userRepository.Get().Where(x => x.Email == userEmail && x.Active).SingleOrDefaultAsync();
+
+            if (user == null)
+                return null;
+
+            //Add Attributes
+            newFolder.User = user;
+
+            int idParent = await GetParentFolder(userEmail, idCurrentFolder);
+
+            if (idCurrentFolder == 0 || idParent == 0) newFolder.ParentDirectory = null;
+            else newFolder.ParentDirectory = idParent;
+            
+            newFolder.Active = true;
+            newFolder.CreatedDate = DateTime.Now;
+            newFolder.UpdatedDate = DateTime.Now;
+            newFolder.CreatedBy = user.Id;
+            newFolder.Name = filename;
+
+            _virtualDirectoryRepository.Insert(newFolder);
+            _virtualDirectoryRepository.Save();
+
+            return await _virtualDirectoryRepository.Get().OrderBy(x => x.CreatedDate).LastOrDefaultAsync();
+        }
     }
 }

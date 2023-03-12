@@ -9,6 +9,7 @@ import { Observable } from 'rxjs';
 export class SharedService {
   readonly APIUrl="https://localhost:7058"
   token = ""
+  currentFolder = 0
 
   constructor(private http:HttpClient) { }
 
@@ -18,6 +19,10 @@ export class SharedService {
 
   getUserbyEmail():Observable<any[]>{
     return this.http.get<any>(this.APIUrl+'/User/email', { headers: { Authorization: this.token } })
+  }
+
+  editUser(user : any):Observable<any>{
+    return this.http.patch<any>(this.APIUrl+'/User', user, { headers: { Authorization: this.token } })
   }
 
   filesByUser(idCurrentFolder : number):Observable<any[]>{
@@ -30,6 +35,10 @@ export class SharedService {
 
   getParentFolder(idCurrentFolder : number):Observable<any>{
     return this.http.get<any>(this.APIUrl+'/VirtualDirectory/getparent?idCurrentFolder=' + idCurrentFolder,  { headers: { Authorization: this.token } })
+  }
+
+  addFolder(folder : any):Observable<any>{
+    return this.http.post<any>(this.APIUrl+'/VirtualDirectory', folder, { headers: { Authorization: this.token } });
   }
 
   favouriteFilesByUser():Observable<any[]>{

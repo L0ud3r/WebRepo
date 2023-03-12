@@ -20,6 +20,7 @@ namespace WebRepo.DAL.Entities
         public string PasswordSalt { get; set; }
         public string PasswordHash { get; set; }
         public string Email { get; set; }
+        public string? photoURL { get; set; }
         public virtual ICollection<FileBlob> Files { get; set; }
         public virtual ICollection<UserToken> UserTokens { get; set; }
         public virtual ICollection<VirtualDirectory> VirtualDirectories { get; set; }

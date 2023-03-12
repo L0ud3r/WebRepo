@@ -34,6 +34,8 @@ import { MdbValidationModule } from 'mdb-angular-ui-kit/validation';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DetailsComponent } from './file/details/details.component';
 import { NgxFileDropModule } from 'ngx-file-drop';
+import { EditComponent } from './user/edit/edit.component';
+import { LoginlayoutComponent } from './loginlayout/loginlayout.component';
 
 @NgModule({
   declarations: [
@@ -43,7 +45,9 @@ import { NgxFileDropModule } from 'ngx-file-drop';
     FileComponent,
     FavouriteComponent,
     DeletedComponent,
-    DetailsComponent
+    DetailsComponent,
+    EditComponent,
+    LoginlayoutComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
@@ -76,7 +80,7 @@ import { NgxFileDropModule } from 'ngx-file-drop';
     MdbValidationModule,
     BrowserAnimationsModule
   ],
-  providers: [],
+  providers: [FileComponent],
   bootstrap: [AppComponent]
 })
 export class AppModule { }

@@ -4,6 +4,7 @@ using System.Security.Claims;
 using WebRepo.App.Interfaces;
 using WebRepo.DAL.Entities;
 using WebRepo.Infra;
+using WebRepo.Models;
 
 namespace WebRepo.Controllers
 {
@@ -60,6 +61,21 @@ namespace WebRepo.Controllers
             var parentFolderId = await _virtualDirectoryService.GetParentFolder(userEmail, idCurrentFolder);
 
             return new JsonResult(true) { StatusCode = 200, Value = parentFolderId };
+        }
+
+        [HttpPost]
+        public async Task<IActionResult> AddFolder(NewFolderViewModel folder)
+        {
+            string userEmail = "";
+
+            if (User.Identity.IsAuthenticated)
+                userEmail = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value;
+            else
+                return new JsonResult(false) { StatusCode = 401, Value = "User not authenticated" };
+
+            var newFolder = await _virtualDirectoryService.AddFolder(userEmail, folder.IdCurrentDirectory, folder.Name);
+
+            return new JsonResult(true) { StatusCode = 200, Value = newFolder };
         }
     }
 }

@@ -19,6 +19,10 @@ export class FileComponent {
   selectedFileName: string = ""
   fileOn : boolean = false
   currentFolder : number = 0;
+  newFolder : any = {
+    Name: "",
+    IdCurrentDirectory: 0
+  }
 
   constructor(private service : SharedService, private dialogReference : MatDialog) { this.selectedFile = null; }
 
@@ -85,6 +89,7 @@ export class FileComponent {
     this.getUserFolders(idFolder);
     this.getUserFiles(idFolder);
     this.currentFolder = idFolder;
+    this.service.currentFolder = idFolder;
   }
 
   getUserFiles(idFolder : number) : void {
@@ -137,6 +142,7 @@ export class FileComponent {
           } else {
             this.userFilesPretty[i].createdDate = `${diffSeconds} second${diffSeconds > 1 ? 's' : ''} ago`;
           }*/
+
         }
     },
       error => {
@@ -198,6 +204,24 @@ export class FileComponent {
       error => {
         alert("Error!")
       })
+  }
+
+  getCurrentFolder(): number {
+    return this.currentFolder;
+  }
+
+  addFolder(currentFolder : number) : void{
+    this.newFolder.Name = "NewFolder"
+    this.newFolder.IdCurrentDirectory = currentFolder
+
+    this.service.addFolder(this.newFolder).subscribe(
+      data => {
+        alert("Success!")
+        location.reload()
+      },
+      error => {
+        alert("Error!")
+    })
   }
 
   message(message : string) : void{

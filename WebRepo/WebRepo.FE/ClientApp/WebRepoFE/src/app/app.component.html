@@ -86,7 +86,12 @@
 </div><!--//app-sidepanel-->
 </header><!--//app-header-->
 
-<div class="app-wrapper">
+<div (contextmenu)="onContextMenu($event)" class="app-wrapper h-100">
+  <div class="context-menu" [style.left.px]="contextMenuX" [style.top.px]="contextMenuY" *ngIf="showContextMenu">
+    <ul>
+      <li (click)="addFolder()">Add Folder</li>
+    </ul>
+  </div>
 <router-outlet></router-outlet>
 <!--<div style="display:flex; flex-direction:column;">
   <footer style="margin-top: auto;">

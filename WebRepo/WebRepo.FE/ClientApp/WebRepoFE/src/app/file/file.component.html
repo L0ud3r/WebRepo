@@ -63,14 +63,14 @@
     </a>
 
     <div *ngIf="!userFilesPretty && !userFolders" class="emptyWarning"><br/>You don't have any files here</div>
-    <div>
+    <!--<div>
       <label>Upload Files here:</label>
       <br/>
       <br/>
       <ngx-file-drop dropZoneLabel="Drop files here" (onFileDrop)="dropped($event)"
       (onFileOver)="fileOver($event)" (onFileLeave)="fileLeave($event)"></ngx-file-drop>
       <br/>
-    </div>
+    </div>-->
     <div class="file-grid">
       <div *ngFor="let folder of userFolders" class="file-size col-6 col-md-4 col-xl-3 col-xxl-2">
         <div class="app-card app-card-doc shadow-sm h-100">
