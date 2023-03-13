@@ -90,6 +90,8 @@ namespace WebRepo.App.Services
                 return null;
 
             folder.Name = name;
+            folder.UpdatedDate = DateTime.Now;
+            folder.UpdatedBy = folder.User.Id;
 
             _virtualDirectoryRepository.Update(folder);
             _virtualDirectoryRepository.Save();

@@ -1,0 +1,21 @@
+<div class="modalCustom">
+  <form>
+    <p>Change Profile Picture</p>
+
+    <div class="form-outline mb-4">
+      <label class="form-label" for="form2Example22">Profile Picture: </label>
+      <input type="file" id="form2Example22" class="form-control" style="background-color:#eff1f4" (change)="onFileSelected($event)" />
+    </div>
+
+    <!-- Display the selected image -->
+    <img *ngIf="photoUrl" [src]="photoUrl" width="250em" height="250em" class="rounded-circle mb-4"
+    style="object-fit:cover; display: block; margin: 0 auto;" alt="Selected Image" />
+
+    <div class="d-flex align-items-center justify-content-center text-center flex-column pt-1 pb-1">
+      <button *ngIf="!file" class="btn btn-light btn-block fa-lg gradient-custom-2 mb-3 modified" type="button">Change picture</button>
+      <button *ngIf="file" class="btn btn-success btn-block fa-lg gradient-custom-2 mb-3 modified" type="button" (click)="changePicture()">Change picture</button>
+      <button (click)="closeModal()" class="btn btn-secondary btn-block fa-lg gradient-custom-2 modified" type="button">Cancel</button>
+    </div>
+  </form>
+
+</div>

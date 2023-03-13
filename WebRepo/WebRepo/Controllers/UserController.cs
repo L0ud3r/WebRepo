@@ -27,12 +27,14 @@ namespace WebRepo.Controllers
         private readonly IRepository<User> _userRepository;
         private readonly IUserService _userService;
         private readonly ILogger<UserController> _logger;
+        private readonly IFileService _fileService;
 
-        public UserController(IRepository<User> userRepository, ILogger<UserController> logger, IUserService userService)
+        public UserController(IRepository<User> userRepository, ILogger<UserController> logger, IUserService userService, IFileService fileService)
         {
             _userRepository = userRepository;
             _logger = logger;
             _userService = userService;
+            _fileService = fileService;
         }
 
         [HttpGet]
@@ -42,6 +44,36 @@ namespace WebRepo.Controllers
 
             return new JsonResult(usersList);
         }
+
+        [HttpGet("{userId}/profile-photo")]
+        public async Task<IActionResult> GetProfilePhoto(int userId)
+        {
+            var user = await _userService.GetbyId(userId);
+
+            if (user == null)
+            {
+                return NotFound();
+            }
+
+            if (string.IsNullOrEmpty(user.photoURL))
+            {
+                return NotFound("User does not have a profile photo.");
+            }
+
+            if(user.photoURL == "default_profile_photo.jpg")
+            {
+                var photoPath = Path.Combine(Directory.GetCurrentDirectory(), "..\\WebRepo.DAL\\Photos", user.photoURL);
+                var photoFileStream = System.IO.File.OpenRead(photoPath);
+                return File(photoFileStream, "image/jpeg");
+            }
+            else
+            {
+                var photoPath = Path.Combine(Directory.GetCurrentDirectory(), $"..\\WebRepo.DAL\\Photos\\{user.Id}", user.photoURL);
+                var photoFileStream = System.IO.File.OpenRead(photoPath);
+                return File(photoFileStream, "image/jpeg");
+            }
+        }
+
 
         [HttpGet("{id}")]
         public async Task<IActionResult> Details(int id)
@@ -139,6 +171,31 @@ namespace WebRepo.Controllers
                 return new JsonResult(true) { StatusCode = 200, Value = userEditted };
             }
             return BadRequest();
+        }
+
+        [HttpPatch("changephoto")]
+        public async Task<IActionResult> ChangePhoto(IFormFile file)
+        {
+            try
+            {
+                string userEmail = "";
+
+                if (User.Identity.IsAuthenticated)
+                    userEmail = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value;
+                else
+                    return new JsonResult(false) { StatusCode = 401, Value = "User not authenticated" };
+
+                var userEditted = await _userService.ChangePhoto(userEmail, file);
+
+                if(userEditted == null)
+                    return new JsonResult(false) { StatusCode = 404, Value = "Error on changing user profile picture" };
+
+                return new JsonResult(true) { StatusCode = 200, Value = userEditted };
+            }
+            catch (Exception ex)
+            {
+                return BadRequest();
+            }
         }
 
         [HttpDelete]

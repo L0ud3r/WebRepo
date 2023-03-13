@@ -2,7 +2,6 @@ import { Component } from '@angular/core';
 import { Router } from '@angular/router';
 import { CookieService } from 'ngx-cookie-service';
 import { SharedService } from 'src/app/shared.service';
-import { DatePipe } from '@angular/common';
 
 @Component({
   selector: 'app-login',
@@ -17,9 +16,6 @@ export class LoginComponent {
   };
 
   constructor(private service: SharedService, private router : Router, private cookieService: CookieService) { }
-
-  ngOnInit(): void {
-  }
 
   login(): void {
     this.service.login(this.conta).subscribe(

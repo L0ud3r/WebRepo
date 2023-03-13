@@ -12,6 +12,7 @@ import {MatDialogModule} from '@angular/material/dialog';
 import { AppComponent } from './app.component';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 import { UserComponent } from './user/user.component';
+import { EditComponent } from './user/edit/edit.component';
 import { LoginComponent } from './user/login/login.component';
 import { FileComponent } from './file/file.component';
 import { FavouriteComponent } from './file/favourite/favourite.component';
@@ -34,8 +35,11 @@ import { MdbValidationModule } from 'mdb-angular-ui-kit/validation';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DetailsComponent } from './file/details/details.component';
 import { NgxFileDropModule } from 'ngx-file-drop';
-import { EditComponent } from './user/edit/edit.component';
 import { LoginlayoutComponent } from './loginlayout/loginlayout.component';
+import { NewFolderComponent } from './file/new-folder/new-folder.component';
+import { EditFolderNameComponent } from './file/edit-folder-name/edit-folder-name.component';
+import { EditFileNameComponent } from './file/edit-file-name/edit-file-name.component';
+import { ChangePhotoComponent } from './user/change-photo/change-photo.component';
 
 @NgModule({
   declarations: [
@@ -47,7 +51,11 @@ import { LoginlayoutComponent } from './loginlayout/loginlayout.component';
     DeletedComponent,
     DetailsComponent,
     EditComponent,
-    LoginlayoutComponent
+    LoginlayoutComponent,
+    NewFolderComponent,
+    EditFolderNameComponent,
+    EditFileNameComponent,
+    ChangePhotoComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

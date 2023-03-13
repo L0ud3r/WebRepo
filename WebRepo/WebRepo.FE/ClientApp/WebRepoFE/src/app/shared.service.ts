@@ -20,6 +20,14 @@ export class SharedService {
     return this.http.get<any>(this.APIUrl+'/User/email', { headers: { Authorization: this.token } })
   }
 
+  getUserPhoto():Observable<any>{
+    return this.http.get<any>(this.APIUrl+'/User/email', { headers: { Authorization: this.token } })
+  }
+
+  updateUserPhoto(file : any):Observable<any>{
+    return this.http.patch<any>(this.APIUrl+'/User/changephoto', file,{ headers: { Authorization: this.token } })
+  }
+
   getDeletedFiles():Observable<any[]>{
     return this.http.get<any>(this.APIUrl+'/File/deleted', { headers: { Authorization: this.token } })
   }
@@ -49,7 +57,6 @@ export class SharedService {
   }
 
   deleteRecoverFile(file : any):Observable<any>{
-    console.log(file)
     return this.http.patch<any>(this.APIUrl+'/File/removerecover', file, { headers: { Authorization: this.token } });
   }
 

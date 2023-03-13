@@ -13,7 +13,7 @@ const routes: Routes = [
   { path: 'content', component: FileComponent },
   { path: 'deleted', component: DeletedComponent },
   { path: 'favourite', component: FavouriteComponent },
-  { path: 'account/edit', component: EditComponent }
+  { path: 'edit', component: EditComponent }
 ];
 
 @NgModule({

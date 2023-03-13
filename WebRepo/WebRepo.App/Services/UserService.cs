@@ -16,6 +16,7 @@ using System.Security.Claims;
 using Microsoft.AspNetCore.Mvc;
 using WebRepo.App.Interfaces;
 using Newtonsoft.Json.Linq;
+using Microsoft.AspNetCore.Http;
 
 namespace WebRepo.App.Services
 {
@@ -53,6 +54,7 @@ namespace WebRepo.App.Services
                 newUser.PasswordHash = Convert.ToBase64String(passwordHash);
                 newUser.PasswordSalt = Convert.ToBase64String(passwordSalt);
 
+                newUser.photoURL = "default_profile_photo.jpg";
                 newUser.Active = true;
                 newUser.CreatedDate = DateTime.Now;
                 newUser.UpdatedDate = DateTime.Now;
@@ -61,7 +63,16 @@ namespace WebRepo.App.Services
                 _userRepository.Insert(newUser);
                 _userRepository.Save();
 
-                return _userRepository.Get().OrderBy(x => x.Id).LastOrDefault();
+                var newUserCreated = _userRepository.Get().OrderBy(x => x.Id).LastOrDefault();
+
+                string folderPath = Path.Combine(Directory.GetCurrentDirectory(), $"..\\WebRepo.DAL\\Photos\\{newUserCreated.Id}");
+
+                if (!Directory.Exists(folderPath))
+                {
+                    Directory.CreateDirectory(folderPath);
+                }
+
+                return newUserCreated;
             }
             catch (Exception ex)
             {
@@ -78,6 +89,42 @@ namespace WebRepo.App.Services
 
                 userEdit.UpdatedDate = DateTime.Now;
 
+                _userRepository.Update(userEdit);
+                _userRepository.Save();
+
+                return userEdit;
+            }
+            catch (Exception ex)
+            {
+                return null;
+            }
+        }
+
+        public async Task<User> ChangePhoto(string userEmail, IFormFile file)
+        {
+            try
+            {
+                var userEdit = await _userRepository.Get().Where(x => x.Email == userEmail).SingleOrDefaultAsync();
+
+                if (userEdit == null)
+                    return null;
+
+                var directoryPath = Path.Combine(Directory.GetCurrentDirectory(), $"..\\WebRepo.DAL\\Photos\\{userEdit.Id}");
+                var filePath = Path.Combine(directoryPath, file.FileName);
+                if (!Directory.Exists(directoryPath))
+                {
+                    Directory.CreateDirectory(directoryPath);
+                }
+                if (!Directory.Exists(filePath))
+                {
+                    using (var stream = new FileStream(filePath, FileMode.Create))
+                    {
+                        await file.CopyToAsync(stream);
+                    }
+                }
+
+                userEdit.photoURL = file.FileName;
+                userEdit.UpdatedDate = DateTime.Now;
 
                 _userRepository.Update(userEdit);
                 _userRepository.Save();

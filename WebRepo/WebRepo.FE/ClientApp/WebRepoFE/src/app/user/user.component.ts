@@ -2,6 +2,8 @@ import { Component } from '@angular/core';
 import { SharedService } from '../shared.service';
 import { Router } from '@angular/router';
 import { faPen } from '@fortawesome/free-solid-svg-icons';
+import { ChangePhotoComponent } from './change-photo/change-photo.component';
+import { MatDialog } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-user',
@@ -14,7 +16,7 @@ export class UserComponent {
 
   account:any = {}
 
-  constructor(private service: SharedService, private router: Router) { }
+  constructor(private service: SharedService, private router: Router, private dialogReference : MatDialog) { }
 
   ngOnInit(): void {
     this.userInfo()
@@ -24,12 +26,16 @@ export class UserComponent {
     this.service.getUserbyEmail().subscribe(
       data => {
         this.account = data;
-        console.log(this.account)
+        this.account.photoURL = `https://localhost:7058/User/${this.account.id}/profile-photo`;
       },
       error => {
         alert("Error on loading user's data");
       }
     );
+  }
+
+  changeUserPhoto():void{
+    this.dialogReference.open(ChangePhotoComponent)
   }
 
   /*deleteAccount():void{

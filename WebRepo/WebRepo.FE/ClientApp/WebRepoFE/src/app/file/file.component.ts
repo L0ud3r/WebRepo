@@ -4,6 +4,9 @@ import { MatDialog } from '@angular/material/dialog';
 import { NgxFileDropEntry, FileSystemFileEntry, FileSystemDirectoryEntry } from 'ngx-file-drop';
 import { DetailsComponent } from './details/details.component';
 import { FolderNavigationService } from './folder-navigation.service';
+import { NewFolderComponent } from './new-folder/new-folder.component';
+import { EditFolderNameComponent } from './edit-folder-name/edit-folder-name.component';
+import { EditFileNameComponent } from './edit-file-name/edit-file-name.component';
 
 @Component({
   selector: 'app-file',
@@ -255,11 +258,14 @@ export class FileComponent {
 
     this.service.uploadFile(formData, this.folderService.currentFolder).subscribe(
       data => {
-        alert("Success!")
-        location.reload();
+        alert("File upload successfully")
+        this.getUserFolders(this.currentFolder);
+        this.getUserFiles(this.currentFolder);
+        this.fileOn = false;
       },
       error => {
-        alert("Error!")
+        alert("Error on uploading file")
+        console.log(error)
       })
   }
 
@@ -298,58 +304,17 @@ export class FileComponent {
     return this.currentFolder;
   }
 
-  addFolder(currentFolder : number) : void{
-    this.newFolder.Name = "NewFolder"
-    this.newFolder.IdCurrentDirectory = currentFolder
 
-    this.service.addFolder(this.newFolder).subscribe(
-      data => {
-        alert("Success!")
-        location.reload()
-      },
-      error => {
-        alert("Error!")
-    })
+  addFolder(currentFolder : number) : void{
+    this.dialogReference.open(NewFolderComponent, {data : currentFolder})
   }
 
   changeFilename(file : any) : void {
-    file.fileName = 'PowerPoint Eddited'
-
-    this.edditedFile.id = file.id
-    this.edditedFile.fileName = file.fileName
-
-    this.service.patchFile(this.edditedFile).subscribe(
-      data => {
-        alert("File renamed!")
-        this.getUserFolders(this.currentFolder);
-        this.getUserFiles(this.currentFolder);
-    },
-      error=>{
-        alert("Error on changing filename")
-        this.getUserFolders(this.currentFolder);
-        this.getUserFiles(this.currentFolder);
-        console.log(error)
-    })
+    this.dialogReference.open(EditFileNameComponent, {data : file.id})
   }
 
   changeFoldername(folder : any) : void {
-    folder.name = 'Folder Renamed'
-
-    this.edditedFolder.idCurrentDirectory = folder.id
-    this.edditedFolder.name = folder.name
-
-    this.service.patchFolder(this.edditedFolder).subscribe(
-      data => {
-        alert("Folder renamed!")
-        this.getUserFolders(this.currentFolder);
-        this.getUserFiles(this.currentFolder);
-    },
-      error=>{
-        alert("Error on changing folder name")
-        this.getUserFolders(this.currentFolder);
-        this.getUserFiles(this.currentFolder);
-        console.log(error)
-    })
+    this.dialogReference.open(EditFolderNameComponent, {data : folder.id})
   }
 
   deleteFile(file : any) : void {

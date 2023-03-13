@@ -1,7 +1,9 @@
 import { Component, HostListener } from '@angular/core';
 import { Router } from '@angular/router';
 import { SharedService } from './shared.service';
+import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { FileComponent } from './file/file.component';
+import { HttpClient } from '@angular/common/http';
 import { Inject } from '@angular/core';
 import { FolderNavigationService } from './file/folder-navigation.service';
 
@@ -16,10 +18,12 @@ export class AppComponent {
   contextMenuX : number | null;
   contextMenuY : number | null;
   showContextMenu : boolean;
+  account : any = {}
 
   constructor(private router: Router, private service : SharedService,
      private folderService : FolderNavigationService,
-     @Inject(FileComponent) public fileComponent : FileComponent) {
+     @Inject(FileComponent) public fileComponent : FileComponent,
+     private http: HttpClient, private sanitizer: DomSanitizer) {
     this.contextMenuX = 0;
     this.contextMenuY = 0;
     this.showContextMenu = false;
@@ -28,6 +32,19 @@ export class AppComponent {
   ngOnInit(){
     this.checkLayout();
     document.addEventListener('click', this.hideContextMenu.bind(this));
+    this.userInfo();
+  }
+
+  userInfo(): void {
+    this.service.getUserbyEmail().subscribe(
+      data => {
+        this.account = data;
+        this.account.photoURL = `https://localhost:7058/User/${this.account.id}/profile-photo`;
+      },
+      error => {
+        alert("Error on loading user's data");
+      }
+    );
   }
 
   onContextMenu(event: MouseEvent) {

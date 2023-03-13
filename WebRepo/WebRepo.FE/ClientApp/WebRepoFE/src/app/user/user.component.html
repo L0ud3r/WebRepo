@@ -1,8 +1,8 @@
 <div class = "box">
   <div>
     <div class="d-flex align-items-center" style="gap: 15px">
-        <img src="../assets/img/user.png" class="img-profile rounded-circle"
-             style="height: 5rem; width: 5rem;" />
+        <img src="{{this.account.photoURL}}" class="img-profile rounded-circle "
+             style="height: 5rem; width: 5rem; object-fit:cover;" />
         <div class="d-flex align-items-center" style="gap:10px">
             <h1 id="username">{{account.username}}</h1>
         </div>
@@ -26,9 +26,9 @@
   </div>
   <div class="d-flex" style="gap: 10px;">
     <a class="btn btn-success">
-        <span class="text">Change Profile Photo</span>
+        <span (click)="changeUserPhoto()" class="text">Change Profile Photo</span>
     </a>
-    <a routerLink="edit" id="edit-button" class="btn btn-secondary">
+    <a routerLink="../edit" id="edit-button" class="btn btn-secondary">
       <span class="icon text-white-50">
         <fa-icon [icon]="faPen"></fa-icon>
       </span>

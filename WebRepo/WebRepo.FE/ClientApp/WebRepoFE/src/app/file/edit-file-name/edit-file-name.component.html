@@ -1,0 +1,15 @@
+<div class="modalCustom">
+  <form>
+    <p>Edit filename</p>
+
+    <div class="form-outline mb-4">
+      <label class="form-label" for="form2Example22">File name: </label>
+      <input type="text" id="form2Example22" class="form-control" style="background-color:#eff1f4" [(ngModel)]="edittedFile.fileName" [ngModelOptions]="{standalone: true}" />
+    </div>
+
+    <div class="d-flex align-items-center justify-content-center text-center flex-column pt-1 pb-1">
+      <button (click)="editFile()" class="btn btn-success btn-block fa-lg gradient-custom-2 mb-3 modified" type="button">Rename file</button>
+        <button (click)="closeModal()" class="btn btn-secondary btn-block fa-lg gradient-custom-2 modified" type="button">Cancel</button>
+    </div>
+  </form>
+</div>

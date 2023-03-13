@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
 using WebRepo.App.Interfaces;
 using WebRepo.DAL.Entities;
 using WebRepo.Infra;
-using System.Security.Claims;
-using Microsoft.EntityFrameworkCore;
 
 namespace WebRepo.App.Services
 {
@@ -88,20 +88,68 @@ namespace WebRepo.App.Services
 
                 return newFile;
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return null;
             }
         }
-    
+
         public async Task<FileBlob> PatchFile(int fileId, string fileName)
         {
             var file = await _filesRepository.Get().Where(x => x.Id == fileId).SingleOrDefaultAsync();
+            var extension = string.Empty;
 
             if (_filesRepository.Exists(fileId) == false)
                 return null;
 
-            file.FileName = fileName;
+            if (file.ContentType == "text/plain")
+                extension = ".txt";
+            else if (file.ContentType == "text/html")
+                extension = ".html";
+            else if (file.ContentType == "image/jpg" || file.ContentType == "image/jpeg")
+                extension = ".jpeg";
+            else if (file.ContentType == "image/png")
+                extension = ".png";
+            else if (file.ContentType == "image/gif")
+                extension = ".gif";
+            else if (file.ContentType == "image/bmp")
+                extension = ".bmp";
+            else if (file.ContentType == "image/svg+xml")
+                extension = ".svg";
+            else if (file.ContentType == "audio/wav" || file.ContentType == "audio/x-wav")
+                extension = ".wav";
+            else if (file.ContentType == "audio/mpeg")
+                extension = ".mp3";
+            else if (file.ContentType == "audio/x-ms-wma")
+                extension = ".wma";
+            else if (file.ContentType == "application/json")
+                extension = ".json";
+            else if (file.ContentType == "application/xml")
+                extension = ".xml";
+            else if (file.ContentType == "application/pdf")
+                extension = ".pdf";
+            else if (file.ContentType == "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+                extension = ".docx";
+            else if (file.ContentType == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+                extension = ".xlsx";
+            else if (file.ContentType == "application/vnd.openxmlformats-officedocument.presentationml.presentation")
+                extension = ".pptx";
+            else if (file.ContentType == "application/vnd.ms-powerpoint")
+                extension = ".ppt";
+            else if (file.ContentType == "video/mp4")
+                extension = ".mp4";
+            else if (file.ContentType == "video/x-msvideo")
+                extension = ".avi";
+            else if (file.ContentType == "video/quicktime")
+                extension = ".mov";
+            else if (file.ContentType == "video/x-ms-wmv")
+                extension = ".wmv";
+            else if (file.ContentType == "video/x-matroska")
+                extension = ".mkv";
+            else if (file.ContentType == "video/x-flv")
+                extension = ".flv";
+
+            file.FileName = fileName+extension;
 
             _filesRepository.Update(file);
             _filesRepository.Save();
