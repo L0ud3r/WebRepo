@@ -36,6 +36,7 @@ export class LoginComponent {
 
         this.router.navigateByUrl('content').then(() =>{
           this.router.navigate([decodeURI('content')]);
+          location.reload();
         });
         console.log(this.cookieService.get('.AspNetCore.Application.Id'))
       },

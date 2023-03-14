@@ -1,3 +1,4 @@
+<div *ngIf="!isLoginLayout">
 <header class="app-header fixed-top">
   <div class="app-header-inner">
     <div class="container-fluid py-2">
@@ -26,7 +27,7 @@
               <ul class="dropdown-menu" aria-labelledby="user-dropdown-toggle">
                 <li><a class="dropdown-item" routerLink="account">Account</a></li>
                 <li><hr class="dropdown-divider"></li>
-                <li><a class="dropdown-item" routerLink="/login">Log Out</a></li>
+                <li><a class="dropdown-item" href="/login">Log Out</a></li>
         </ul>
             </div><!--//app-user-dropdown-->
           </div><!--//app-utilities-->
@@ -87,12 +88,8 @@
 </div><!--//app-sidepanel-->
 </header><!--//app-header-->
 
-<div (contextmenu)="onContextMenu($event)" class="app-wrapper h-100">
-  <div class="context-menu" [style.left.px]="contextMenuX" [style.top.px]="contextMenuY" *ngIf="showContextMenu">
-    <ul>
-      <li (click)="addFolder()">Add Folder</li>
-    </ul>
-  </div>
+<div class="app-wrapper h-100">
+
 <router-outlet></router-outlet>
 <!--<div style="display:flex; flex-direction:column;">
   <footer style="margin-top: auto;">
@@ -104,4 +101,8 @@
 </div>-->
 
 </div><!--//app-wrapper-->
+</div>
 
+<div *ngIf="isLoginLayout">
+  <router-outlet></router-outlet>
+</div>

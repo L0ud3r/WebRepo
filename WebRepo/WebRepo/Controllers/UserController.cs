@@ -74,7 +74,6 @@ namespace WebRepo.Controllers
             }
         }
 
-
         [HttpGet("{id}")]
         public async Task<IActionResult> Details(int id)
         {

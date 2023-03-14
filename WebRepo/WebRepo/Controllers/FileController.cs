@@ -1,6 +1,10 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
+using Microsoft.EntityFrameworkCore.Metadata.Internal;
+using Microsoft.Extensions.Primitives;
+using NuGet.Packaging.Signing;
+using System.Net;
 using System.Security.Claims;
 using WebRepo.App.Interfaces;
 using WebRepo.DAL.Entities;
@@ -258,6 +262,115 @@ namespace WebRepo.Controllers
 
             var bytes = await System.IO.File.ReadAllBytesAsync(filepath);
             return File(bytes, contenttype, file.FileName);
+        }
+
+        /*[HttpGet("video/{id}")]
+        //public async Task<IActionResult> GetVideo(int id)
+        //{
+        //    var file = await _fileService.GetById(id);
+
+        //    if (file == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    if (file.ContentType != "video/mp4" || file.ContentType == "video/x-msvideo" || file.ContentType == "video/quicktime" ||
+        //            file.ContentType == "video/x-ms-wmv" || file.ContentType == "video/x-matroska" || file.ContentType == "video/x-flv")
+        //    {
+        //        return BadRequest();
+        //    }
+
+        //    byte[] data;
+        //    using (var memoryStream = new MemoryStream())
+        //    {
+        //        var fileResult = File(System.IO.File.OpenRead(file.PathAPI), file.ContentType);
+        //        await fileResult.ExecuteResultAsync(new ActionContext
+        //        {
+        //            HttpContext = HttpContext
+        //        });
+        //        data = memoryStream.ToArray();
+        //    }
+
+        //    // Set the content type header
+        //    Response.ContentType = file.ContentType;
+
+        //    // Set the content length header
+        //    Response.ContentLength = file.ContentLength;
+
+        //    // Set the status code to partial content if a range request was made
+        //    if (Request.Headers.TryGetValue("Range", out var rangeHeader))
+        //    {
+        //        Response.StatusCode = (int)HttpStatusCode.PartialContent;
+        //    }
+
+        //    // Stream the video file in chunks as the client requests
+        //    var buffer = new byte[4096];
+        //    var bytesRead = 0;
+        //    while (bytesRead < file.ContentLength)
+        //    {
+        //        var bytesToRead = Math.Min(buffer.Length, (int)(file.ContentLength - bytesRead));
+        //        Array.Copy(data, bytesRead, buffer, 0, bytesToRead);
+        //        await Response.Body.WriteAsync(buffer, 0, bytesToRead);
+        //        bytesRead += bytesToRead;
+        //    }
+
+        //    return new EmptyResult();
+        //}*/
+
+        [HttpGet("video/{id}")]
+        public async Task<IActionResult> GetVideo(int id)
+        {
+            var file = await _fileService.GetById(id);
+
+            if (file == null)
+            {
+                return NotFound();
+            }
+
+            if (file.ContentType != "video/mp4" || file.ContentType == "video/x-msvideo" || file.ContentType == "video/quicktime" ||
+                file.ContentType == "video/x-ms-wmv" || file.ContentType == "video/x-matroska" || file.ContentType == "video/x-flv")
+            {
+                return BadRequest();
+            }
+
+            byte[] data = System.IO.File.ReadAllBytes(file.PathAPI+"\\"+file.FileIdentifier);
+            //using (var memoryStream = new MemoryStream())
+            //{
+            //    var fileResult = File(System.IO.File.ReadAllBytes(file.PathAPI), file.ContentType);
+            //    await fileResult.ExecuteResultAsync(new ActionContext
+            //    {
+            //        HttpContext = HttpContext
+            //    });
+            //    data = memoryStream.ToArray();
+            //}
+
+            // Set the content type header
+            Response.ContentType = file.ContentType;
+
+            // Set the content length header
+            Response.ContentLength = file.ContentLength;
+
+            // Set the content disposition header to force download
+            Response.Headers.Add("Content-Disposition", new StringValues("attachment; filename=\"" + file.FileName + "\""));
+
+            // Set the status code to partial content if a range request was made
+            if (Request.Headers.TryGetValue("Range", out var rangeHeader))
+            {
+                Response.StatusCode = (int)HttpStatusCode.PartialContent;
+            }
+
+            // Stream the video file in chunks as the client requests
+            var buffer = new byte[4096];
+            var bytesRead = 0;
+            while (bytesRead < file.ContentLength)
+            {
+                var bytesToRead = Math.Min(buffer.Length, (int)(file.ContentLength - bytesRead));
+                Array.Copy(data, bytesRead, buffer, 0, bytesToRead);
+                await Response.Body.WriteAsync(buffer, 0, bytesToRead);
+                bytesRead += bytesToRead;
+            }
+
+            return new EmptyResult();
         }
 
         [HttpPatch]

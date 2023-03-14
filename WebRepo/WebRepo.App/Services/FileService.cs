@@ -27,6 +27,11 @@ namespace WebRepo.App.Services
             return _filesRepository.Get().Where(x => x.Active == true).ToList();
         }
 
+        public async Task<FileBlob> GetById(int id)
+        {
+            return _filesRepository.GetByID(id);
+        }
+
         public IEnumerable<FileBlob> GetAllByUser(string userEmail)
         {
             return _filesRepository.Get().Where(x => x.Active == true && x.User.Email == userEmail).AsEnumerable();
@@ -65,7 +70,6 @@ namespace WebRepo.App.Services
                 FileBlob newFile = new FileBlob();
 
                 newFile.User = _userRepository.Get().Where(x => x.Email == userEmail).SingleOrDefault();
-
 
                 newFile.FileIdentifier = fileIdentifier;
                 newFile.FileName = file.FileName;

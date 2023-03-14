@@ -54,7 +54,31 @@ export class FileComponent {
   }
   types : any = ["image/jpeg", "Folder"]
 
-  constructor(private service : SharedService, private folderService : FolderNavigationService, private dialogReference : MatDialog) { this.selectedFile = null; }
+  contextMenuX : number | null;
+  contextMenuY : number | null;
+  showContextMenu : boolean;
+
+  constructor(private service : SharedService, private folderService : FolderNavigationService, private dialogReference : MatDialog)
+  {
+    this.selectedFile = null;
+    this.contextMenuX = 0;
+    this.contextMenuY = 0;
+    this.showContextMenu = false;
+  }
+
+  onContextMenu(event: MouseEvent) {
+    event.preventDefault();
+
+    this.contextMenuX = event.clientX;
+    this.contextMenuY = event.clientY;
+    this.showContextMenu = true;
+  }
+
+  hideContextMenu() {
+    this.contextMenuX = 0;
+    this.contextMenuY = 0;
+    this.showContextMenu = false;
+  }
 
   openModal(file:any){
     for(let i = 0; i < this.userFiles.length; i++){
@@ -94,6 +118,7 @@ export class FileComponent {
   ngOnInit(): void {
     this.getUserFolders(this.currentFolder);
     this.getUserFiles(this.currentFolder);
+    document.addEventListener('click', this.hideContextMenu.bind(this));
   }
 
   onFileSelected(event : any) {
@@ -114,6 +139,12 @@ export class FileComponent {
         alert("Something went wrong");
       }
     )
+  }
+
+  @HostListener('click', ['$event'])
+  onClickInsideContextMenu(event: MouseEvent) {
+    event.stopPropagation();
+    this.showContextMenu = false;
   }
 
   changeFolder(idFolder : number) : void{

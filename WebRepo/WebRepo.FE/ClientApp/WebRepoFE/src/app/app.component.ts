@@ -1,5 +1,5 @@
 import { Component, HostListener } from '@angular/core';
-import { Router } from '@angular/router';
+import { ActivatedRoute, Router } from '@angular/router';
 import { SharedService } from './shared.service';
 import { DomSanitizer, SafeUrl } from '@angular/platform-browser';
 import { FileComponent } from './file/file.component';
@@ -15,23 +15,18 @@ import { FolderNavigationService } from './file/folder-navigation.service';
 export class AppComponent {
   title = 'WebRepoFE';
   isLoginLayout : boolean = false;
-  contextMenuX : number | null;
-  contextMenuY : number | null;
-  showContextMenu : boolean;
   account : any = {}
 
   constructor(private router: Router, private service : SharedService,
      private folderService : FolderNavigationService,
      @Inject(FileComponent) public fileComponent : FileComponent,
-     private http: HttpClient, private sanitizer: DomSanitizer) {
-    this.contextMenuX = 0;
-    this.contextMenuY = 0;
-    this.showContextMenu = false;
+     private http: HttpClient, private sanitizer: DomSanitizer,
+     private activatedRoute: ActivatedRoute) {
+
    }
 
   ngOnInit(){
     this.checkLayout();
-    document.addEventListener('click', this.hideContextMenu.bind(this));
     this.userInfo();
   }
 
@@ -47,31 +42,14 @@ export class AppComponent {
     );
   }
 
-  onContextMenu(event: MouseEvent) {
-    event.preventDefault();
-
-    this.contextMenuX = event.clientX;
-    this.contextMenuY = event.clientY;
-    this.showContextMenu = true;
-  }
-
-  hideContextMenu() {
-    this.contextMenuX = 0;
-    this.contextMenuY = 0;
-    this.showContextMenu = false;
-  }
-
   checkLayout(){
-    if(this.router.url === '/login'){
-      this.isLoginLayout = true;
-    }
+    if(window.location.href === 'http://localhost:4200/login' ||
+     window.location.href === 'http://localhost:4200/' || window.location.href === 'http://localhost:4200')
+      this.isLoginLayout = true
+    else
+      this.isLoginLayout = false
   }
 
-  @HostListener('click', ['$event'])
-  onClickInsideContextMenu(event: MouseEvent) {
-    event.stopPropagation();
-    this.showContextMenu = false;
-  }
 
   addFolder() : void{
     this.fileComponent.addFolder(this.folderService.currentFolder);
