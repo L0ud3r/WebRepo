@@ -41,6 +41,7 @@ import { EditFolderNameComponent } from './file/edit-folder-name/edit-folder-nam
 import { EditFileNameComponent } from './file/edit-file-name/edit-file-name.component';
 import { ChangePhotoComponent } from './user/change-photo/change-photo.component';
 import { TestComponent } from './test/test.component';
+import { RegisterComponent } from './user/register/register.component';
 
 @NgModule({
   declarations: [
@@ -57,7 +58,8 @@ import { TestComponent } from './test/test.component';
     EditFolderNameComponent,
     EditFileNameComponent,
     ChangePhotoComponent,
-    TestComponent
+    TestComponent,
+    RegisterComponent
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),

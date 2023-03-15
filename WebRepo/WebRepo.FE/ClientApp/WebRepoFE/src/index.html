@@ -39,6 +39,7 @@
     <!-- Page Specific JS -->
     <script src="assets/js/app.js"></script>
     <script src="assets/js/charts-demo.js"></script>
+    <script src="assets/js/myscript.js"></script>
 
     <!-- FontAwesome JS-->
     <script defer src="assets/plugins/fontawesome/js/all.min.js"></script>
@@ -52,7 +53,13 @@
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 
-<body class="app mat-typography" style="background-color: #F2F3FB;">
+<body *ngIf="window.location.href === 'http://localhost:4200/register' || window.location.href === 'http://localhost:4200/login' ||
+window.location.href === 'http://localhost:4200/' || window.location.href === 'http://localhost:4200'">
+    <app-root>Loading</app-root>
+</body>
+
+<body *ngIf="window.location.href != 'http://localhost:4200/register' && window.location.href != 'http://localhost:4200/login' &&
+window.location.href != 'http://localhost:4200/' && window.location.href != 'http://localhost:4200'" class="app mat-typography" style="background-color: #F2F3FB;">
     <app-root>Loading</app-root>
 </body>
 

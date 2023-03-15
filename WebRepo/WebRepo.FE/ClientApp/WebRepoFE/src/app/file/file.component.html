@@ -1,10 +1,10 @@
-<div (contextmenu)="onContextMenu($event)"  class="app-content pt-3 p-md-3 p-lg-4 h-100">
+<div (contextmenu)="onContextMenu($event)" class="app-content pt-3 p-md-3 p-lg-4 h-100">
   <div class="context-menu" [style.left.px]="contextMenuX" [style.top.px]="contextMenuY" *ngIf="showContextMenu">
     <ul>
       <li (click)="addFolder(currentFolder)">Add Folder</li>
     </ul>
   </div>
-  <div class="container-xl">
+  <div  class="container-xl">
     <div class="row g-3 mb-4 align-items-center justify-content-between">
       <div class="col-auto">
             <h1 class="app-page-title mb-0">My Docs</h1>
@@ -55,6 +55,15 @@
       </div><!--//col-auto-->
     </div><!--//row-->
 
+    <div>
+      <label>Upload Files here:</label>
+      <br/>
+      <br/>
+      <ngx-file-drop dropZoneLabel="Drop files here" (onFileDrop)="dropped($event)"></ngx-file-drop>
+      
+      <br/>
+    </div>
+
     <a *ngIf="currentFolder != 0" (click)="goToParentFolder(currentFolder)" class="btn btn-secondary mb-3">
       <span class="icon text-white-50">
           <i class="fas fa-arrow-left"></i>
@@ -63,14 +72,7 @@
     </a>
 
     <div *ngIf="!userFilesPretty && !userFolders" class="emptyWarning"><br/>You don't have any files here</div>
-    <!--<div>
-      <label>Upload Files here:</label>
-      <br/>
-      <br/>
-      <ngx-file-drop dropZoneLabel="Drop files here" (onFileDrop)="dropped($event)"
-      (onFileOver)="fileOver($event)" (onFileLeave)="fileLeave($event)"></ngx-file-drop>
-      <br/>
-    </div>-->
+
     <div class="file-grid">
       <div *ngFor="let folder of userFolders" class="file-size col-6 col-md-4 col-xl-3 col-xxl-2">
         <div class="app-card app-card-doc shadow-sm h-100">
@@ -140,7 +142,7 @@
             <div class="app-doc-meta">
               <ul class="list-unstyled mb-0">
                 <li><span class="text-muted">Type:</span> {{file.contentType}}</li>
-                <li><span class="text-muted">Size:</span> {{file.contentLength}} KB</li>
+                <li><span class="text-muted">Size:</span> {{file.contentLength}}</li>
                 <li><span class="text-muted">Uploaded:</span> {{file.createdDate}}</li>
               </ul>
             </div><!--//app-doc-meta-->
@@ -190,3 +192,4 @@
 
   </div><!--//container-fluid-->
 </div>
+

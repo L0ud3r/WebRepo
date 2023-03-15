@@ -3,15 +3,6 @@ import { MAT_DIALOG_DATA } from '@angular/material/dialog';
 import { MatDialogRef } from '@angular/material/dialog';
 import { Inject } from '@angular/core';
 
-interface File {
-  id: number;
-  filename: string;
-  contentType: string;
-  size: number;
-  addedDate: Date;
-  isFavourite: boolean;
-}
-
 @Component({
   selector: 'app-details',
   templateUrl: './details.component.html',
@@ -25,6 +16,7 @@ export class DetailsComponent {
   size;
   addedDate;
   isFavourite;
+  postDate;
 
 
   constructor(@Inject(MAT_DIALOG_DATA) public data : any, private dialogRef: MatDialogRef<DetailsComponent>) {
@@ -34,6 +26,7 @@ export class DetailsComponent {
     this.size = data.contentLength;
     this.isFavourite = data.isFavourite;
     this.addedDate = data.createdDate;
+    this.postDate = data.postDate;
   }
 
   ngOnInit():void{
@@ -42,5 +35,4 @@ export class DetailsComponent {
   closeModal() {
     this.dialogRef.close();
   }
-
 }

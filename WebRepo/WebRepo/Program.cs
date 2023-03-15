@@ -14,6 +14,7 @@ using WebRepo.App.Services;
 using WebRepo.App.Interfaces;
 using Microsoft.Extensions.Options;
 using WebRepo.Middleware;
+using Microsoft.AspNetCore.Http.Features;
 
 namespace WebRepo
 {
@@ -48,13 +49,7 @@ namespace WebRepo
 
             builder.Services.AddCors(c =>
             {
-                //c.AddDefaultPolicy(builder =>
-                //{
-                //    builder.WithOrigins("http://localhost:4200")
-                //           .AllowCredentials()
-                //           .AllowAnyHeader()
-                //           .AllowAnyMethod();
-                //});
+                c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
                 c.AddPolicy("AllowAngularOrigin",
                 builder => builder.WithOrigins("http://localhost:4200")
                    .AllowCredentials()
@@ -67,6 +62,12 @@ namespace WebRepo
                     options.SerializerSettings.MaxDepth = 3;
                     options.SerializerSettings.ReferenceLoopHandling = ReferenceLoopHandling.Ignore;
                 });
+
+            builder.Services.Configure<FormOptions>(options =>
+            {
+                options.ValueLengthLimit = int.MaxValue;
+                options.MultipartBodyLengthLimit = long.MaxValue;
+            });
 
             builder.Services.AddLogging(loggingBuilder =>
             {
@@ -108,6 +109,8 @@ namespace WebRepo
 
 
             app.UseCors("AllowAngularOrigin");
+
+            app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())

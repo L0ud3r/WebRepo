@@ -37,6 +37,8 @@ export class FileComponent {
     idCurrentDirectory: 0
   }
 
+  postDates : any = []
+
   modelFiles = {
     offset: 0,
     limit: 0,
@@ -52,7 +54,8 @@ export class FileComponent {
       }
     ]
   }
-  types : any = ["image/jpeg", "Folder"]
+  types : any = ["Folder"]
+  typeExists : boolean = false
 
   contextMenuX : number | null;
   contextMenuY : number | null;
@@ -83,29 +86,40 @@ export class FileComponent {
   openModal(file:any){
     for(let i = 0; i < this.userFiles.length; i++){
       if(this.userFiles[i].id == file.id){
-        this.dialogReference.open(DetailsComponent, {data : this.userFiles[i]})
+        let detailedFile = {
+          id : file.id,
+          fileName : file.fileName,
+          contentType : file.contentType,
+          contentLength : file.contentLength,
+          isFavourite : file.isFavourite,
+          createdDate : file.createdDate,
+          postDate : this.postDates[i]
+        }
+
+        this.dialogReference.open(DetailsComponent, {data : detailedFile})
       }
     }
   }
 
   public dropped(event: any) {
-    let files: NgxFileDropEntry[] = event.files;
+    if (event.files && event.files.length > 0) {
+        let files: NgxFileDropEntry[] = event.files;
 
-    for (const droppedFile of files) {
-
-      // Is it a file?
-      if (droppedFile.fileEntry.isFile) {
-        const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
-        fileEntry.file((file: File) => {
-          this.selectedFile = file;
-        });
-      } else {
-        // It was a directory (empty directories are added, otherwise only files)
-        const fileEntry = droppedFile.fileEntry as FileSystemDirectoryEntry;
-        console.log(droppedFile.relativePath, fileEntry);
-      }
+        for (const droppedFile of files) {
+            if (droppedFile.fileEntry.isFile) {
+                const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
+                fileEntry.file((file: File) => {
+                    const formData = new FormData();
+                    formData.append('file', file);
+                    console.log(formData);
+                });
+            } else {
+                const fileEntry = droppedFile.fileEntry as FileSystemDirectoryEntry;
+                console.log(droppedFile.relativePath, fileEntry);
+            }
+        }
     }
-  }
+}
 
   public fileOver(event:any){
     console.log(event);
@@ -161,29 +175,79 @@ export class FileComponent {
         this.userFilesPretty = data;
 
         for(let i = 0; i < this.userFilesPretty.length; i++){
-          if(this.userFilesPretty[i].contentType == "application/vnd.openxmlformats-officedocument.presentationml.presentation")
+
+          this.typeExists = false
+
+          for(let i = 0; i < this.types.length || this.typeExists; i++){
+            if(this.types[i] == this.userFiles[i].contentType){
+              this.typeExists = true
+            }
+          }
+
+          if(!this.typeExists) this.types.push(this.userFiles[i].contentType)
+
+          if (this.userFilesPretty[i].contentType == "text/plain")
+            this.userFilesPretty[i].contentType = "Text";
+          else if (this.userFilesPretty[i].contentType == "text/html")
+            this.userFilesPretty[i].contentType = "HTML";
+          else if (this.userFilesPretty[i].contentType == "image/jpg" || this.userFilesPretty[i].contentType == "image/jpeg")
+            this.userFilesPretty[i].contentType = "JPEG";
+          else if (this.userFilesPretty[i].contentType == "image/png")
+            this.userFilesPretty[i].contentType = "PNG";
+          else if (this.userFilesPretty[i].contentType == "image/gif")
+            this.userFilesPretty[i].contentType = "GIF";
+          else if (this.userFilesPretty[i].contentType == "image/bmp")
+            this.userFilesPretty[i].contentType = "BMP";
+          else if (this.userFilesPretty[i].contentType == "image/svg+xml")
+            this.userFilesPretty[i].contentType = "SVG";
+          else if (this.userFilesPretty[i].contentType == "audio/wav" || this.userFilesPretty[i].contentType == "audio/x-wav")
+            this.userFilesPretty[i].contentType = "WAV";
+          else if (this.userFilesPretty[i].contentType == "audio/mpeg")
+            this.userFilesPretty[i].contentType = "MP3";
+          else if (this.userFilesPretty[i].contentType == "audio/x-ms-wma")
+            this.userFilesPretty[i].contentType = "WMA";
+          else if (this.userFilesPretty[i].contentType == "application/json")
+            this.userFilesPretty[i].contentType = "JSON";
+          else if (this.userFilesPretty[i].contentType == "application/xml")
+            this.userFilesPretty[i].contentType = "XML";
+          else if (this.userFilesPretty[i].contentType == "application/pdf")
+            this.userFilesPretty[i].contentType = "PDF";
+          else if (this.userFilesPretty[i].contentType == "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+            this.userFilesPretty[i].contentType = "Word";
+          else if (this.userFilesPretty[i].contentType == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+            this.userFilesPretty[i].contentType = "Open XML";
+          else if (this.userFilesPretty[i].contentType == "application/vnd.ms-powerpoint"
+          || this.userFilesPretty[i].contentType == "application/vnd.openxmlformats-officedocument.presentationml.presentation")
             this.userFilesPretty[i].contentType = "PowerPoint"
-            else if(this.userFilesPretty[i].contentType == "image/jpg")
-            this.userFilesPretty[i].contentType = "JPG"
-          else if(this.userFilesPretty[i].contentType == "image/jpeg")
-            this.userFilesPretty[i].contentType = "JPEG"
-          else if(this.userFilesPretty[i].contentType == "image/png")
-            this.userFilesPretty[i].contentType = "PNG"
-          else if(this.userFilesPretty[i].contentType == "application/pdf")
-            this.userFilesPretty[i].contentType = "PDF"
-          else if(this.userFilesPretty[i].contentType == "plain/text")
-            this.userFilesPretty[i].contentType = "Text"
+          else if (this.userFilesPretty[i].contentType == "video/mp4")
+            this.userFilesPretty[i].contentType = "MP4";
+          else if (this.userFilesPretty[i].contentType == "video/x-msvideo")
+            this.userFilesPretty[i].contentType = "AVI";
+          else if (this.userFilesPretty[i].contentType == "video/quicktime")
+            this.userFilesPretty[i].contentType = "MOV";
+          else if (this.userFilesPretty[i].contentType == "video/x-ms-wmv")
+            this.userFilesPretty[i].contentType = "WMV";
+          else if (this.userFilesPretty[i].contentType == "video/x-matroska")
+            this.userFilesPretty[i].contentType = "MKV";
+          else if (this.userFilesPretty[i].contentType == "video/x-flv")
+            this.userFilesPretty[i].contentType = "FLV";
 
-          this.userFilesPretty[i].contentLength = parseInt(Math.round(this.userFilesPretty[i].contentLength / 1000).toString())
+          if(Math.round(this.userFilesPretty[i].contentLength * 0.000001) <= 0)
+            this.userFilesPretty[i].contentLength = parseInt(Math.round(this.userFilesPretty[i].contentLength * 0.001).toString()) + " KB"
+          else
+            this.userFilesPretty[i].contentLength = parseInt(Math.round(this.userFilesPretty[i].contentLength * 0.000001).toString()) + " MB"
 
-          /*
-          // Assuming your backend returns the created date as a string
+
+          if(Math.round(this.userFilesPretty[i].contentLength * 0.000001) <= 0)
+            this.userFilesPretty[i].contentLength = parseInt(Math.round(this.userFilesPretty[i].contentLength * 0.001).toString()) + " KB"
+
+          this.postDates.push(this.userFiles[i].createdDate)
+
           const createdDateString = this.userFilesPretty[i].createdDate;
           const createdDate = new Date(createdDateString);
           const currentDate = new Date();
           const diffMilliseconds = currentDate.getTime() - createdDate.getTime();
 
-          // Convert milliseconds to the desired time unit
           const diffSeconds = Math.floor(diffMilliseconds / 1000);
           const diffMinutes = Math.floor(diffSeconds / 60);
           const diffHours = Math.floor(diffMinutes / 60);
@@ -203,7 +267,7 @@ export class FileComponent {
             this.userFilesPretty[i].createdDate = `${diffMinutes} minute${diffMinutes > 1 ? 's' : ''} ago`;
           } else {
             this.userFilesPretty[i].createdDate = `${diffSeconds} second${diffSeconds > 1 ? 's' : ''} ago`;
-          }*/
+          }
         }
     },
       error => {
@@ -227,18 +291,51 @@ export class FileComponent {
           this.userFilesPretty = data.rows;
 
           for(let i = 0; i < this.userFilesPretty.length; i++){
-            if(this.userFilesPretty[i].contentType == "application/vnd.openxmlformats-officedocument.presentationml.presentation")
-              this.userFilesPretty[i].contentType = "PowerPoint"
-              else if(this.userFilesPretty[i].contentType == "image/jpg")
-              this.userFilesPretty[i].contentType = "JPG"
-            else if(this.userFilesPretty[i].contentType == "image/jpeg")
-              this.userFilesPretty[i].contentType = "JPEG"
-            else if(this.userFilesPretty[i].contentType == "image/png")
-              this.userFilesPretty[i].contentType = "PNG"
-            else if(this.userFilesPretty[i].contentType == "application/pdf")
-              this.userFilesPretty[i].contentType = "PDF"
-            else if(this.userFilesPretty[i].contentType == "plain/text")
-              this.userFilesPretty[i].contentType = "Text"
+            if (this.userFilesPretty[i].contentType == "text/plain")
+            this.userFilesPretty[i].contentType = "Text";
+          else if (this.userFilesPretty[i].contentType == "text/html")
+            this.userFilesPretty[i].contentType = "HTML";
+          else if (this.userFilesPretty[i].contentType == "image/jpg" || this.userFilesPretty[i].contentType == "image/jpeg")
+            this.userFilesPretty[i].contentType = "JPEG";
+          else if (this.userFilesPretty[i].contentType == "image/png")
+            this.userFilesPretty[i].contentType = "PNG";
+          else if (this.userFilesPretty[i].contentType == "image/gif")
+            this.userFilesPretty[i].contentType = "GIF";
+          else if (this.userFilesPretty[i].contentType == "image/bmp")
+            this.userFilesPretty[i].contentType = "BMP";
+          else if (this.userFilesPretty[i].contentType == "image/svg+xml")
+            this.userFilesPretty[i].contentType = "SVG";
+          else if (this.userFilesPretty[i].contentType == "audio/wav" || this.userFilesPretty[i].contentType == "audio/x-wav")
+            this.userFilesPretty[i].contentType = "WAV";
+          else if (this.userFilesPretty[i].contentType == "audio/mpeg")
+            this.userFilesPretty[i].contentType = "MP3";
+          else if (this.userFilesPretty[i].contentType == "audio/x-ms-wma")
+            this.userFilesPretty[i].contentType = "WMA";
+          else if (this.userFilesPretty[i].contentType == "application/json")
+            this.userFilesPretty[i].contentType = "JSON";
+          else if (this.userFilesPretty[i].contentType == "application/xml")
+            this.userFilesPretty[i].contentType = "XML";
+          else if (this.userFilesPretty[i].contentType == "application/pdf")
+            this.userFilesPretty[i].contentType = "PDF";
+          else if (this.userFilesPretty[i].contentType == "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+            this.userFilesPretty[i].contentType = "Word";
+          else if (this.userFilesPretty[i].contentType == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+            this.userFilesPretty[i].contentType = "Open XML";
+          else if (this.userFilesPretty[i].contentType == "application/vnd.ms-powerpoint"
+          || this.userFilesPretty[i].contentType == "application/vnd.openxmlformats-officedocument.presentationml.presentation")
+            this.userFilesPretty[i].contentType = "PowerPoint"
+          else if (this.userFilesPretty[i].contentType == "video/mp4")
+            this.userFilesPretty[i].contentType = "MP4";
+          else if (this.userFilesPretty[i].contentType == "video/x-msvideo")
+            this.userFilesPretty[i].contentType = "AVI";
+          else if (this.userFilesPretty[i].contentType == "video/quicktime")
+            this.userFilesPretty[i].contentType = "MOV";
+          else if (this.userFilesPretty[i].contentType == "video/x-ms-wmv")
+            this.userFilesPretty[i].contentType = "WMV";
+          else if (this.userFilesPretty[i].contentType == "video/x-matroska")
+            this.userFilesPretty[i].contentType = "MKV";
+          else if (this.userFilesPretty[i].contentType == "video/x-flv")
+            this.userFilesPretty[i].contentType = "FLV";
 
             this.userFilesPretty[i].contentLength = parseInt(Math.round(this.userFilesPretty[i].contentLength / 1000).toString())
           }

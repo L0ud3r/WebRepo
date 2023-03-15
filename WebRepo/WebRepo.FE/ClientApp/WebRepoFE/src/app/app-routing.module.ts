@@ -7,15 +7,18 @@ import { DeletedComponent } from './file/deleted/deleted.component';
 import { FavouriteComponent } from './file/favourite/favourite.component';
 import { EditComponent } from './user/edit/edit.component';
 import { TestComponent } from './test/test.component';
+import { RegisterComponent } from './user/register/register.component';
 
 const routes: Routes = [
+  { path: 'test', component: TestComponent},
+
   { path: 'account', component: UserComponent },
   { path: 'login', component: LoginComponent },
   { path: 'content', component: FileComponent },
   { path: 'deleted', component: DeletedComponent },
   { path: 'favourite', component: FavouriteComponent },
   { path: 'edit', component: EditComponent },
-  { path: 'test', component: TestComponent}
+  { path: 'register', component: RegisterComponent }
 ];
 
 @NgModule({

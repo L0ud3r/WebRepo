@@ -8,6 +8,7 @@ namespace WebRepo.App.Interfaces
         Task<List<FileBlob>> Get();
         Task<FileBlob> GetById(int id);
         Task<FileBlob> GetFileByIdentifier(string fileIdentifier);
+        Task<FileBlob> GetUserFile(string filename, string userEmail);
         Task<List<FileBlob>> GetByUser(string userEmail, int idCurrentFolder);
         IEnumerable<FileBlob> GetAllByUser(string userEmail);
         Task<List<FileBlob>> GetByFavourites(string userEmail);

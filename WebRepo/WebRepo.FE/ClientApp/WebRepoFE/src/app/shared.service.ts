@@ -8,12 +8,17 @@ import { Observable } from 'rxjs';
 })
 export class SharedService {
   readonly APIUrl="https://localhost:7058"
+  readonly baseURL = "https://e5f8-149-90-178-195.eu.ngrok.io"
   token = ""
 
   constructor(private http:HttpClient) { }
 
   login(account : any):Observable<any>{
     return this.http.post<any>(this.APIUrl+'/User/login', account)
+  }
+
+  register(account : any):Observable<any>{
+    return this.http.post<any>(this.APIUrl+'/User', account)
   }
 
   getUserbyEmail():Observable<any[]>{

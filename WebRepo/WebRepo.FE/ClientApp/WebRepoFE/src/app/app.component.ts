@@ -27,7 +27,8 @@ export class AppComponent {
 
   ngOnInit(){
     this.checkLayout();
-    this.userInfo();
+    if(!this.isLoginLayout)
+      this.userInfo();
   }
 
   userInfo(): void {
@@ -43,7 +44,7 @@ export class AppComponent {
   }
 
   checkLayout(){
-    if(window.location.href === 'http://localhost:4200/login' ||
+    if(window.location.href === 'http://localhost:4200/register' || window.location.href === 'http://localhost:4200/login' ||
      window.location.href === 'http://localhost:4200/' || window.location.href === 'http://localhost:4200')
       this.isLoginLayout = true
     else

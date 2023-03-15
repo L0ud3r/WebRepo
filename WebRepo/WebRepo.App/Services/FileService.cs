@@ -42,6 +42,11 @@ namespace WebRepo.App.Services
             return _filesRepository.Get().Where(x => x.FileIdentifier == fileIdentifier && x.Active == true).SingleOrDefault();
         }
 
+        public async Task<FileBlob> GetUserFile(string filename, string userEmail) 
+        {
+            return _filesRepository.Get().Where(x => x.FileName == filename && x.User.Email == userEmail && x.Active == true).SingleOrDefault();
+        }
+
         public async Task<List<FileBlob>> GetByUser(string userEmail, int idCurrentFolder)
         {
             if (idCurrentFolder != 0)

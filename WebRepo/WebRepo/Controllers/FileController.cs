@@ -197,6 +197,8 @@ namespace WebRepo.Controllers
         [Route("uploadfile/{idCurrentFolder}")]
         [ProducesResponseType(StatusCodes.Status200OK)]
         [ProducesResponseType(typeof(string), StatusCodes.Status400BadRequest)]
+        [RequestSizeLimit(long.MaxValue)]
+        [RequestFormLimits(KeyLengthLimit = int.MaxValue ,ValueLengthLimit = int.MaxValue, ValueCountLimit = int.MaxValue)]
         public async Task<IActionResult> UploadFile(IFormFile file, int idCurrentFolder)
         {
             var result = await WriteFile(file, idCurrentFolder);
@@ -317,26 +319,75 @@ namespace WebRepo.Controllers
         //    return new EmptyResult();
         //}*/
 
-        [HttpGet("video/{id}")]
-        public async Task<IActionResult> GetVideo(int id)
+        [HttpGet("video")]
+        public async Task<IActionResult> GetVideo(string filename, string userEmail)
         {
-            var file = await _fileService.GetById(id);
+            var file = await _fileService.GetUserFile(filename, userEmail);
 
             if (file == null)
-            {
                 return NotFound();
-            }
 
             if (file.ContentType != "video/mp4" || file.ContentType == "video/x-msvideo" || file.ContentType == "video/quicktime" ||
                 file.ContentType == "video/x-ms-wmv" || file.ContentType == "video/x-matroska" || file.ContentType == "video/x-flv")
-            {
                 return BadRequest();
-            }
 
-            byte[] data = System.IO.File.ReadAllBytes(file.PathAPI+"\\"+file.FileIdentifier);
+            byte[] data = System.IO.File.ReadAllBytes(file.PathAPI + "\\" + file.FileIdentifier);
+            //byte[] data;
             //using (var memoryStream = new MemoryStream())
             //{
-            //    var fileResult = File(System.IO.File.ReadAllBytes(file.PathAPI), file.ContentType);
+            //    var fileResult = File(System.IO.File.OpenRead(file.PathAPI + "\\" + file.FileIdentifier), file.ContentType);
+            //    await fileResult.ExecuteResultAsync(new ActionContext
+            //    {
+            //        HttpContext = HttpContext
+            //    });
+            //    data = memoryStream.ToArray();
+            //}
+
+            // Set the content type header
+            Response.ContentType = file.ContentType;
+
+            // Set the content length header
+            Response.ContentLength = file.ContentLength;
+
+            // Set the content disposition header to force download
+            Response.Headers.Add("Content-Disposition", new StringValues("attachment; filename=\"" + file.FileName + "\""));
+
+            // Set the status code to partial content if a range request was made
+            if (Request.Headers.TryGetValue("Range", out var rangeHeader))
+            {
+                Response.StatusCode = (int)HttpStatusCode.PartialContent;
+            }
+
+            // Stream the video file in chunks as the client requests
+            var buffer = new byte[4096];
+            var bytesRead = 0;
+            while (bytesRead < file.ContentLength)
+            {
+                var bytesToRead = Math.Min(buffer.Length, (int)(file.ContentLength - bytesRead));
+                Array.Copy(data, bytesRead, buffer, 0, bytesToRead);
+                await Response.Body.WriteAsync(buffer, 0, bytesToRead);
+                bytesRead += bytesToRead;
+            }
+
+            return new EmptyResult();
+        }
+
+        [HttpGet("music")]
+        public async Task<IActionResult> GetMusic(string filename, string userEmail)
+        {
+            var file = await _fileService.GetUserFile(filename, userEmail);
+
+            if (file == null)
+                return NotFound();
+
+            if (file.ContentType != "audio/wav" || file.ContentType == "audio/x-wav" || file.ContentType == "audio/mpeg" || file.ContentType == "audio/x-ms-wma")
+                return BadRequest();
+
+            byte[] data = System.IO.File.ReadAllBytes(file.PathAPI + "\\" + file.FileIdentifier);
+            //byte[] data;
+            //using (var memoryStream = new MemoryStream())
+            //{
+            //    var fileResult = File(System.IO.File.OpenRead(file.PathAPI + "\\" + file.FileIdentifier), file.ContentType);
             //    await fileResult.ExecuteResultAsync(new ActionContext
             //    {
             //        HttpContext = HttpContext

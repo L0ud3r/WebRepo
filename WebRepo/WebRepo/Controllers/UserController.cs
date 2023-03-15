@@ -101,7 +101,7 @@ namespace WebRepo.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Create([Bind("Username, Email, Password")] UserViewModel user)
+        public async Task<IActionResult> Create([FromBody] UserViewModel user)
         {
             if(_userRepository.Get().Where(x => x.Username == user.Username).SingleOrDefault() != null)
                 return new JsonResult(false) { StatusCode = 400, Value = "Username already exists!" };
