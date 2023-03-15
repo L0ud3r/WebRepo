@@ -1,0 +1,49 @@
+[HttpGet("movie/{id}")]
+public async Task<IActionResult> GetMovie(int id)
+{
+    // Call API 1 endpoint to retrieve video file
+    var url = $"http://api1.example.com/video/{id}";
+    var request = new HttpRequestMessage(HttpMethod.Get, url);
+
+    // Set the range header if it exists in the request
+    if (Request.Headers.TryGetValue("Range", out var rangeHeader))
+    {
+        request.Headers.Add("Range", rangeHeader);
+    }
+
+    var response = await _httpClient.SendAsync(request);
+
+    // Stream the video file to the client
+    var stream = await response.Content.ReadAsStreamAsync();
+    var contentType = response.Content.Headers.ContentType.MediaType;
+    var contentLength = response.Content.Headers.ContentLength;
+
+    // Set the content length header
+    Response.ContentLength = contentLength;
+
+    // Set the content type header
+    Response.ContentType = contentType;
+
+    // Set the status code to partial content if a range request was made
+    if (response.StatusCode == HttpStatusCode.PartialContent)
+    {
+        Response.StatusCode = (int)HttpStatusCode.PartialContent;
+    }
+
+    // Stream the video file in chunks as the client requests
+    var buffer = new byte[4096];
+    var bytesRead = 0;
+    while (bytesRead < contentLength)
+    {
+        var bytesToRead = Math.Min(buffer.Length, (int)(contentLength - bytesRead));
+        var bytes = await stream.ReadAsync(buffer, 0, bytesToRead);
+        if (bytes == 0)
+        {
+            break;
+        }
+        await Response.Body.WriteAsync(buffer, 0, bytes);
+        bytesRead += bytes;
+    }
+
+    return new EmptyResult();
+}

@@ -1,0 +1,50 @@
+Dia 1:
+	- DAILY
+		- Apresentação
+		- Organizacao de reunioes
+		- Exercicio tutorial Microsoft, meter link
+	- TARDE
+		- Correcao do tutorial
+		- Falar das correcoes
+
+Dia 2:
+	- DAILY
+		- Duvidas do exercicio, explicar problema e solucao
+		- Exercer parte UI, Views
+		- Trabalhar com bootstraps, explicar processos
+	
+	- Tarde
+		- Exercer bootstrap
+		- Explicar o que foi feito (botoes, paginamento e mudança de pag)
+
+Dia 3:
+	- Daily
+		- Revisao do que foi feito
+		- Tirar duvidas
+		- Fazer Add Genre
+		- Fixar bug de barra de pesquisa
+	- Tarde
+		- Revisao da daily
+		- Resolucao do bug
+
+Dia 4:
+	- Daily
+		- Meeting com orientador de estagio e com o ricardo
+		- Feedback do estagio
+		- Revisao e feedback dos projetos de cada um
+	- Tarde
+
+Primeira semana done
+
+Segunda semana nao houve segunda nem terça mas foi basicamente acabar a app até quarta-feira
+após isso foi implementar a API com a camada de API
+
+Terceira semana:
+Objetivo passar project para angular (front end)
+	-> dia 1: dificuldades a trabalhar com tokens de sessao e reutilizacao de bootstraps 
+	-> dia 3: acabar projeto MvcMovie
+	-> dia 4: começar projeto Dropbox, explicar o que foi pretendido aos estagiarios
+
+Quarta semana:
+	-> Foco no desenvolvimento da aplicacao Dropbox
+	-> Explicar ao longo da semana o que foi feito (ver git)

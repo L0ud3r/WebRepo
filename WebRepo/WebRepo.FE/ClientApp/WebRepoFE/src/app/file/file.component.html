@@ -59,8 +59,9 @@
       <label>Upload Files here:</label>
       <br/>
       <br/>
-      <ngx-file-drop dropZoneLabel="Drop files here" (onFileDrop)="dropped($event)"></ngx-file-drop>
-      
+      <ngx-dropzone id="dropzone" (change)="dropped($event)" >
+        <ngx-dropzone-label>Drop files here!</ngx-dropzone-label>
+      </ngx-dropzone>
       <br/>
     </div>
 

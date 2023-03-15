@@ -1,0 +1,40 @@
+Project Title: Instagram Follower Automation Tool
+
+Project Objective: Develop a .NET Core application that automates Instagram follower management by following target pages' followers using the Instagram API. The project should also include a dashboard that allows the user to configure target pages and general automation settings.
+
+Functional Requirements: 
+
+Ability to input a list of Instagram pages to target for follower acquisition -> Introduzir lista de páginas para selecionar followers das mesmas para seguir
+Ability to configure the rate of follows the program should execute each minute -> Número de follows por minuto
+Ability to authenticate Instagram API credentials and store them securely -> Colocar conta de instagram na API de forma segura (Auth)
+Ability to retrieve followers of target pages using the Instagram API -> (Não entendi bem) Recuperar seguidores das páginas
+Ability to follow followers of target pages using the Instagram API -> Seguir followers das páginas
+Ability to track progress and monitor execution through a dashboard -> Histórico de followers + Keep Track de Objetivos (?)
+
+Non-Functional Requirements: 
+
+The system should be developed using .NET Core
+The system should follow secure coding practices and store credentials securely
+The system should be scalable and able to handle a large number of target pages and followers
+The system should be easy to use and intuitive for the end-user
+
+Assumptions: 
+
+The system will be developed for use on a Windows operating system
+The user has access to Instagram API credentials and has permission to use them for automation purposes
+Deliverables: .NET Core application source code
+User guide for the application
+Test plan and test results
+
+Constraints: 
+
+The system must comply with Instagram's terms of service and API usage policies
+The system must not violate Instagram's automation and spam policies
+
+Milestones: 
+
+Requirements gathering and analysis
+Design and architecture
+Development and coding
+Testing and quality assurance
+Deployment and delivery

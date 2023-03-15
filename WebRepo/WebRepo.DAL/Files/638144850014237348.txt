@@ -1,0 +1,84 @@
+[HttpGet("video/{id}")]
+public async Task<IActionResult> GetVideo(int id)
+{
+    // Retrieve video file from web repository
+    var video = await _webRepository.GetVideo(id);
+
+    // Set response headers for range requests
+    var fileSize = new FileInfo(video.Path).Length;
+    HttpContext.Response.Headers.Add("Accept-Ranges", "bytes");
+    HttpContext.Response.Headers.Add("Content-Length", fileSize.ToString());
+
+    // Check for range request
+    var rangeHeader = HttpContext.Request.Headers["Range"].ToString();
+    if (!string.IsNullOrEmpty(rangeHeader))
+    {
+        // Parse range header
+        var rangeMatch = Regex.Match(rangeHeader, @"bytes=(\d+)-(\d*)");
+        var start = long.Parse(rangeMatch.Groups[1].Value);
+        var end = rangeMatch.Groups[2].Success ? long.Parse(rangeMatch.Groups[2].Value) : fileSize - 1;
+
+        // Set response status code for partial content
+        HttpContext.Response.StatusCode = (int)HttpStatusCode.PartialContent;
+
+        // Stream partial content to client
+        var contentLength = end - start + 1;
+        var buffer = new byte[1024 * 1024]; // 1 MB buffer
+        using (var stream = new FileStream(video.Path, FileMode.Open, FileAccess.Read))
+        {
+            stream.Seek(start, SeekOrigin.Begin);
+            var bytesRead = 0;
+            while ((bytesRead = stream.Read(buffer, 0, buffer.Length)) > 0 && contentLength > 0)
+            {
+                var bytesToWrite = (int)Math.Min(bytesRead, contentLength);
+                await HttpContext.Response.Body.WriteAsync(buffer, 0, bytesToWrite);
+                contentLength -= bytesToWrite;
+            }
+        }
+    }
+    else
+    {
+        // Stream entire content to client
+        var stream = new FileStream(video.Path, FileMode.Open, FileAccess.Read);
+        var contentType = GetContentType(video.Type);
+        return File(stream, contentType, video.Name);
+    }
+}
+
+
+
+
+[HttpPost]
+[Route("download")]
+public async Task<IActionResult> DownloadVideo()
+{
+    var file = Request.Form.Files[0];
+
+    if (file.Length == 0)
+    {
+        return BadRequest("File is empty");
+    }
+
+    var path = Path.Combine("Files", file.FileName);
+
+    using (var stream = new FileStream(path, FileMode.Create))
+    {
+        await file.CopyToAsync(stream);
+    }
+
+    var fileStream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.Read, 4096, useAsync: true);
+
+    var response = new HttpResponseMessage(HttpStatusCode.OK)
+    {
+        Content = new StreamContent(fileStream),
+    };
+
+    response.Content.Headers.ContentType = new MediaTypeHeaderValue("video/mp4");
+    response.Content.Headers.ContentLength = fileStream.Length;
+
+    return new FileStreamResult(fileStream, "video/mp4")
+    {
+        EnableRangeProcessing = true,
+        FileDownloadName = file.FileName
+    };
+}

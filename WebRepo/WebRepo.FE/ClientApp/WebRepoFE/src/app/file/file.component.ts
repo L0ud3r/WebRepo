@@ -102,24 +102,24 @@ export class FileComponent {
   }
 
   public dropped(event: any) {
-    if (event.files && event.files.length > 0) {
-        let files: NgxFileDropEntry[] = event.files;
+    console.log(event)
+    const formData = new FormData();
+    let file: File = event.addedFiles[0];
 
-        for (const droppedFile of files) {
-            if (droppedFile.fileEntry.isFile) {
-                const fileEntry = droppedFile.fileEntry as FileSystemFileEntry;
-                fileEntry.file((file: File) => {
-                    const formData = new FormData();
-                    formData.append('file', file);
-                    console.log(formData);
-                });
-            } else {
-                const fileEntry = droppedFile.fileEntry as FileSystemDirectoryEntry;
-                console.log(droppedFile.relativePath, fileEntry);
-            }
-        }
-    }
-}
+    formData.append('file', file);
+
+    this.service.uploadFile(formData, this.folderService.currentFolder).subscribe(
+      data => {
+        alert("File upload successfully")
+        this.getUserFolders(this.currentFolder);
+        this.getUserFiles(this.currentFolder);
+        this.fileOn = false;
+      },
+      error => {
+        alert("Error on uploading file")
+        console.log(error)
+      })
+  }
 
   public fileOver(event:any){
     console.log(event);
@@ -175,7 +175,6 @@ export class FileComponent {
         this.userFilesPretty = data;
 
         for(let i = 0; i < this.userFilesPretty.length; i++){
-
           this.typeExists = false
 
           for(let i = 0; i < this.types.length || this.typeExists; i++){

@@ -35,6 +35,7 @@ import { MdbValidationModule } from 'mdb-angular-ui-kit/validation';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { DetailsComponent } from './file/details/details.component';
 import { NgxFileDropModule } from 'ngx-file-drop';
+import { NgxDropzoneModule } from 'ngx-dropzone'
 import { LoginlayoutComponent } from './loginlayout/loginlayout.component';
 import { NewFolderComponent } from './file/new-folder/new-folder.component';
 import { EditFolderNameComponent } from './file/edit-folder-name/edit-folder-name.component';
@@ -68,6 +69,7 @@ import { RegisterComponent } from './user/register/register.component';
     FormsModule,
     HttpClientModule,
     NgxFileDropModule,
+    NgxDropzoneModule,
     AppRoutingModule,
     MatDialogModule,
     NgbPaginationModule,
