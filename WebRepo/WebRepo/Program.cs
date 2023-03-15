@@ -50,11 +50,11 @@ namespace WebRepo
             builder.Services.AddCors(c =>
             {
                 c.AddPolicy("AllowOrigin", options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
-                c.AddPolicy("AllowAngularOrigin",
+                /*c.AddPolicy("AllowAngularOrigin",
                 builder => builder.WithOrigins("http://localhost:4200")
                    .AllowCredentials()
                    .AllowAnyHeader()
-                   .AllowAnyMethod());
+                   .AllowAnyMethod());*/
             });
 
             builder.Services.AddControllers().AddNewtonsoftJson(
@@ -105,12 +105,8 @@ namespace WebRepo
 
             var app = builder.Build();
 
-            //app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            //app.UseCors("AllowOrigin");
 
-
-            app.UseCors("AllowAngularOrigin");
-
-            app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
@@ -126,6 +122,8 @@ namespace WebRepo
             app.UseCookiePolicy(cookiePolicyOptions);
 
             app.UseRouting();
+
+            app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
             app.UseAuthentication();
 
