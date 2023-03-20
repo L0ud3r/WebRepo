@@ -64,10 +64,10 @@ import { RegisterComponent } from './user/register/register.component';
   ],
   imports: [
     BrowserModule.withServerTransition({ appId: 'ng-cli-universal' }),
+    HttpClientModule,
     NgbModule,
     NgbAlertModule,
     FormsModule,
-    HttpClientModule,
     NgxFileDropModule,
     NgxDropzoneModule,
     AppRoutingModule,

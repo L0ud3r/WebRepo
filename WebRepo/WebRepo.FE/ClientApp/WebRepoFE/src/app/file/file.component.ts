@@ -130,8 +130,9 @@ export class FileComponent {
   }
 
   ngOnInit(): void {
-    this.getUserFolders(this.currentFolder);
-    this.getUserFiles(this.currentFolder);
+    //this.getUserFolders(this.currentFolder);
+    //this.getUserFiles(this.currentFolder);
+    this.service.test().subscribe(data => { alert("sucess"); console.log(data) })
     document.addEventListener('click', this.hideContextMenu.bind(this));
   }
 

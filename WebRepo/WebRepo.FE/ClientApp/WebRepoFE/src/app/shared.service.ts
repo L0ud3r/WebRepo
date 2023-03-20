@@ -1,14 +1,14 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, ObservedValueOf } from 'rxjs';
 
 
 @Injectable({
   providedIn: 'root'
 })
 export class SharedService {
-  readonly APIUrl="https://localhost:7058"
-  //readonly APIUrl = "https://2dea-149-90-178-195.eu.ngrok.io"
+  //readonly APIUrl="https://localhost:7058"
+  readonly APIUrl = "https://6d0d-149-90-178-195.eu.ngrok.io"
   token = ""
 
   constructor(private http:HttpClient) { }
@@ -17,6 +17,10 @@ export class SharedService {
     return this.http.post<any>(this.APIUrl+'/User/login', account, { headers: { "Access-Control-Allow-Origin": "*" } })
   }
 
+  test():Observable<any>{
+    return this.http.get<any>("https://postman-echo.com/get?foo1=bar1&foo2=bar2", { headers: { "Access-Control-Allow-Origin": "*"} , "withCredentials": true })
+  }
+  //this.APIUrl+'/File', { headers: { 'Access-Control-Allow-Origin': '*' }}
   register(account : any):Observable<any>{
     return this.http.post<any>(this.APIUrl+'/User', account)
   }

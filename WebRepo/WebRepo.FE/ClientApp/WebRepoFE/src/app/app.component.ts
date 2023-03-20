@@ -27,8 +27,8 @@ export class AppComponent {
 
   ngOnInit(){
     this.checkLayout();
-    if(!this.isLoginLayout)
-      this.userInfo();
+    //if(!this.isLoginLayout)
+      //this.userInfo();
   }
 
   userInfo(): void {

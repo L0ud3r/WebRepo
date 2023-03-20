@@ -54,7 +54,8 @@ namespace WebRepo
                 builder => builder.WithOrigins("http://localhost:4200")
                    .AllowCredentials()
                    .AllowAnyHeader()
-                   .AllowAnyMethod());*/
+                   .AllowAnyMethod()
+                   .WithExposedHeaders("Access-Control-Allow-Origin"));*/
             });
 
             builder.Services.AddControllers().AddNewtonsoftJson(
@@ -105,9 +106,6 @@ namespace WebRepo
 
             var app = builder.Build();
 
-            //app.UseCors("AllowOrigin");
-
-
             // Configure the HTTP request pipeline.
             if (app.Environment.IsDevelopment())
             {
@@ -123,7 +121,7 @@ namespace WebRepo
 
             app.UseRouting();
 
-            app.UseCors(options => options.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
+            //app.UseCors("AllowAngularOrigin");
 
             app.UseAuthentication();
 
@@ -131,9 +129,32 @@ namespace WebRepo
 
             app.UseAuthorization();
 
+            //app.Use((context, next) => { 
+            //    context.Response.Headers.Add("Access-Control-Allow-Origin", "*");
+            //    return next(context);
+            //});
+
+            app.Use((context, next) =>
+            {
+                if (context.Request.Headers.Any(k => k.Key.Contains("Origin")) && context.Request.Method == "OPTIONS")
+                {
+                    context.Response.StatusCode = 200;
+                    context.Response.Headers.Add("Access-Control-Allow-Origin", "*");
+                    context.Response.Headers.Add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+                    context.Response.Headers.Add("Access-Control-Allow-Headers", "Content-Type, Authorization");
+                    return context.Response.WriteAsync("handled");
+                }
+
+                return next.Invoke();
+            });
+
             app.UseCustomAuth();
 
             app.MapDefaultControllerRoute();
+
+            app.UseCors("AllowOrigin");
+
+            app.UseCors(x => x.AllowAnyOrigin().AllowAnyMethod().AllowAnyHeader());
 
             app.MapControllers();
 

@@ -1,4 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.StaticFiles;
 using Microsoft.EntityFrameworkCore.Metadata.Internal;
@@ -29,6 +30,15 @@ namespace WebRepo.Controllers
             _fileService = fileService;
         }
 
+        [HttpOptions("list")]
+        public IActionResult PreflightResponse()
+        {
+            HttpContext.Response.Headers.Add("Access-Control-Allow-Origin", "*");
+            HttpContext.Response.Headers.Add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+            HttpContext.Response.Headers.Add("Access-Control-Allow-Headers", "Content-Type, Authorization");
+            return Ok();
+        }
+
         [HttpGet]
         public async Task<IActionResult> Get()
         {
@@ -36,7 +46,8 @@ namespace WebRepo.Controllers
 
             if (files.Count <= 0)
                 return new JsonResult(false) { StatusCode = 404, Value = "There are no files on the database" };
-
+           // HttpContext.Response.Headers.Add("Access-Control-Allow-Origin", "*");
+           // PreflightResponse();
             return new JsonResult(true) { StatusCode = 200, Value = files };
         }
 
