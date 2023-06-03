@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { SharedService } from 'src/app/shared.service';
 import { FolderNavigationService } from '../folder-navigation.service';
+import { ElementRef, Renderer2 } from '@angular/core';
 
 @Component({
   selector: 'app-favourite',
@@ -30,7 +31,8 @@ export class FavouriteComponent {
   }
   types : any = ["image/jpeg", "Folder"]
 
-  constructor(private service : SharedService, private folderService : FolderNavigationService) { this.selectedFile = null; }
+  constructor(private service : SharedService, private folderService : FolderNavigationService,
+    private elementRef: ElementRef, private renderer: Renderer2) { this.selectedFile = null; }
 
   ngOnInit(): void {
     this.favouriteFilesByUser();

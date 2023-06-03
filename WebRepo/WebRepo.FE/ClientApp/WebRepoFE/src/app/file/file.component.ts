@@ -130,9 +130,8 @@ export class FileComponent {
   }
 
   ngOnInit(): void {
-    //this.getUserFolders(this.currentFolder);
-    //this.getUserFiles(this.currentFolder);
-    this.service.test().subscribe(data => { alert("sucess"); console.log(data) })
+    this.getUserFolders(this.currentFolder);
+    this.getUserFiles(this.currentFolder);
     document.addEventListener('click', this.hideContextMenu.bind(this));
   }
 
@@ -177,7 +176,6 @@ export class FileComponent {
 
         for(let i = 0; i < this.userFilesPretty.length; i++){
           this.typeExists = false
-
           for(let i = 0; i < this.types.length || this.typeExists; i++){
             if(this.types[i] == this.userFiles[i].contentType){
               this.typeExists = true
@@ -231,6 +229,8 @@ export class FileComponent {
             this.userFilesPretty[i].contentType = "MKV";
           else if (this.userFilesPretty[i].contentType == "video/x-flv")
             this.userFilesPretty[i].contentType = "FLV";
+          else
+            this.userFilesPretty[i].contentType = "Unkown";
 
           if(Math.round(this.userFilesPretty[i].contentLength * 0.000001) <= 0)
             this.userFilesPretty[i].contentLength = parseInt(Math.round(this.userFilesPretty[i].contentLength * 0.001).toString()) + " KB"

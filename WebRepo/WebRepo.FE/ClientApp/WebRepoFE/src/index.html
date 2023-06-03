@@ -15,53 +15,55 @@
 
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <title>WebRepo</title>
 
-    <!-- Meta -->
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <!-- Meta -->
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-    <meta name="description" content="Portal - Bootstrap 5 Admin Dashboard Template For Developers">
-    <meta name="author" content="Xiaoying Riley at 3rd Wave Media">
-    <link rel="shortcut icon" href="http://www.w3.org/2000/svg">
+  <meta name="description" content="Portal - Bootstrap 5 Admin Dashboard Template For Developers">
+  <meta name="author" content="Xiaoying Riley at 3rd Wave Media">
+  <link rel="shortcut icon" href="http://www.w3.org/2000/svg">
 
+  <!-- App CSS -->
+  <link id="theme-style" rel="stylesheet" href="assets/css/portal.css">
+  <link rel="stylesheet" href="assets/css/all.css">
 
-    <!-- Javascript -->
-    <script src="assets/plugins/popper.min.js"></script>
-    <script src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
-
-    <!-- Charts JS -->
-    <script src="assets/plugins/chart.js/chart.min.js"></script>
-    <script src="assets/js/index-charts.js"></script>
-
-    <!-- Page Specific JS -->
-    <script src="assets/js/app.js"></script>
-    <script src="assets/js/charts-demo.js"></script>
-    <script src="assets/js/myscript.js"></script>
-
-    <!-- FontAwesome JS-->
-    <script defer src="assets/plugins/fontawesome/js/all.min.js"></script>
-
-    <!-- App CSS -->
-    <link id="theme-style" rel="stylesheet" href="assets/css/portal.css">
-    <link rel="stylesheet" href="assets/css/all.css">
-
-    <link rel="preconnect" href="https://fonts.gstatic.com">
-    <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:wght@300;400;500&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
 </head>
 
 <body *ngIf="window.location.href === 'http://localhost:4200/register' || window.location.href === 'http://localhost:4200/login' ||
 window.location.href === 'http://localhost:4200/' || window.location.href === 'http://localhost:4200'">
-    <app-root>Loading</app-root>
+  <app-root>Loading</app-root>
 </body>
 
 <body *ngIf="window.location.href != 'http://localhost:4200/register' && window.location.href != 'http://localhost:4200/login' &&
-window.location.href != 'http://localhost:4200/' && window.location.href != 'http://localhost:4200'" class="app mat-typography" style="background-color: #F2F3FB;">
-    <app-root>Loading</app-root>
+window.location.href != 'http://localhost:4200/' && window.location.href != 'http://localhost:4200'"
+  class="app mat-typography" style="background-color: #F2F3FB;">
+  <app-root>Loading</app-root>
 </body>
 
-</html>
+<!-- Javascript -->
+<script src="assets/js/jquery.min.js"></script>
+<script src="assets/plugins/popper.min.js"></script>
+<script src="assets/plugins/bootstrap/js/bootstrap.min.js"></script>
 
+<!-- Charts JS -->
+<script src="assets/plugins/chart.js/chart.min.js"></script>
+<script src="assets/js/index-charts.js"></script>
+
+<!-- Page Specific JS -->
+<script src="assets/js/app.js"></script>
+<script src="assets/js/charts-demo.js"></script>
+<script src="assets/js/myscript.js"></script>
+
+
+<!-- FontAwesome JS-->
+<script defer src="assets/plugins/fontawesome/js/all.min.js"></script>
+
+</html>

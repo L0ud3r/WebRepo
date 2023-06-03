@@ -34,7 +34,7 @@ namespace WebRepo.Controllers
         public IActionResult PreflightResponse()
         {
             HttpContext.Response.Headers.Add("Access-Control-Allow-Origin", "*");
-            HttpContext.Response.Headers.Add("Access-Control-Allow-Methods", "GET, POST, PUT, DELETE, OPTIONS");
+            HttpContext.Response.Headers.Add("Access-Control-Allow-Methods", "GET, POST, PUT, PATCH, DELETE, OPTIONS");
             HttpContext.Response.Headers.Add("Access-Control-Allow-Headers", "Content-Type, Authorization");
             return Ok();
         }

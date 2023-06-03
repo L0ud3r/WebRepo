@@ -1,0 +1,38 @@
+<!doctype html>
+<html>
+<head>
+    <meta http-equiv="x-ua-compatible" content="IE=edge">
+    <link rel="stylesheet" href="http://code.jquery.com/ui/1.10.3/themes/smoothness/jquery-ui.css">
+    <link rel="stylesheet" href="jquery.mentions.css">
+    <script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+    <script src="http://code.jquery.com/ui/1.10.3/jquery-ui.js"></script>
+    <script src="jquery.mentions.js"></script>
+</head>
+<body>
+    <textarea class="mentions" data-val-required="true" style="width: 100%;"></textarea>
+
+    <script>
+
+        $("#mentions").text
+
+        var data = [
+            "user1 SURNAME",
+            "user2 SURNAME",
+            "user3 SURNAME",
+            "joao POVOA"
+        ];
+
+        $('#mentions').on('input', function(){
+            var text = $(this).val();
+            HTMLFormControlsCollection.log(text)
+        })
+
+
+        $('#mentions').mentionsInput({
+
+            source: data,
+            triggerChar: '@',  
+            showAtCaret: true
+        });
+    </script>
+</body>

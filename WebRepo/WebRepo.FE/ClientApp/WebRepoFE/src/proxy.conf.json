@@ -1,0 +1,6 @@
+{
+  "/api": {
+  "target": "https://b971-149-90-178-195.eu.ngrok.io",
+  "secure": false
+  }
+}
