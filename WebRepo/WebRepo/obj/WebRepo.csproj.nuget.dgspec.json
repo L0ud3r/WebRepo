@@ -4,12 +4,12 @@
     "C:\\Programming\\WebRepo\\WebRepo\\WebRepo\\WebRepo.csproj": {}
   },
   "projects": {
-    "C:\\Programming\\WebRepo\\WebRepo\\WebRepo.App\\WebRepo.App.csproj": {
+    "C:\\Programming\\WebRepo\\WebRepo\\WebRepo.App\\WebRepo.ASL.csproj": {
       "version": "1.0.0",
       "restore": {
-        "projectUniqueName": "C:\\Programming\\WebRepo\\WebRepo\\WebRepo.App\\WebRepo.App.csproj",
-        "projectName": "WebRepo.App",
-        "projectPath": "C:\\Programming\\WebRepo\\WebRepo\\WebRepo.App\\WebRepo.App.csproj",
+        "projectUniqueName": "C:\\Programming\\WebRepo\\WebRepo\\WebRepo.App\\WebRepo.ASL.csproj",
+        "projectName": "WebRepo.ASL",
+        "projectPath": "C:\\Programming\\WebRepo\\WebRepo\\WebRepo.App\\WebRepo.ASL.csproj",
         "packagesPath": "C:\\Users\\Asus\\.nuget\\packages\\",
         "outputPath": "C:\\Programming\\WebRepo\\WebRepo\\WebRepo.App\\obj\\",
         "projectStyle": "PackageReference",
@@ -253,8 +253,8 @@
           "net6.0": {
             "targetAlias": "net6.0",
             "projectReferences": {
-              "C:\\Programming\\WebRepo\\WebRepo\\WebRepo.App\\WebRepo.App.csproj": {
-                "projectPath": "C:\\Programming\\WebRepo\\WebRepo\\WebRepo.App\\WebRepo.App.csproj"
+              "C:\\Programming\\WebRepo\\WebRepo\\WebRepo.App\\WebRepo.ASL.csproj": {
+                "projectPath": "C:\\Programming\\WebRepo\\WebRepo\\WebRepo.App\\WebRepo.ASL.csproj"
               },
               "C:\\Programming\\WebRepo\\WebRepo\\WebRepo.DAL\\WebRepo.DAL.csproj": {
                 "projectPath": "C:\\Programming\\WebRepo\\WebRepo\\WebRepo.DAL\\WebRepo.DAL.csproj"

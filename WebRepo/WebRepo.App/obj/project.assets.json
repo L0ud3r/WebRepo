@@ -9645,9 +9645,9 @@
   "project": {
     "version": "1.0.0",
     "restore": {
-      "projectUniqueName": "C:\\Programming\\WebRepo\\WebRepo\\WebRepo.App\\WebRepo.App.csproj",
-      "projectName": "WebRepo.App",
-      "projectPath": "C:\\Programming\\WebRepo\\WebRepo\\WebRepo.App\\WebRepo.App.csproj",
+      "projectUniqueName": "C:\\Programming\\WebRepo\\WebRepo\\WebRepo.App\\WebRepo.ASL.csproj",
+      "projectName": "WebRepo.ASL",
+      "projectPath": "C:\\Programming\\WebRepo\\WebRepo\\WebRepo.App\\WebRepo.ASL.csproj",
       "packagesPath": "C:\\Users\\Asus\\.nuget\\packages\\",
       "outputPath": "C:\\Programming\\WebRepo\\WebRepo\\WebRepo.App\\obj\\",
       "projectStyle": "PackageReference",

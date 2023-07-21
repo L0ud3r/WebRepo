@@ -587,9 +587,9 @@ C:\Programming\WebRepo\WebRepo\WebRepo\obj\Debug\net6.0\WebRepo.genruntimeconfig
 C:\Programming\WebRepo\WebRepo\WebRepo\obj\Debug\net6.0\ref\WebRepo.dll
 C:\Programming\WebRepo\WebRepo\WebRepo\bin\Debug\net6.0\WebRepo.Infra.dll
 C:\Programming\WebRepo\WebRepo\WebRepo\bin\Debug\net6.0\WebRepo.Infra.pdb
-C:\Programming\WebRepo\WebRepo\WebRepo\bin\Debug\net6.0\WebRepo.App.dll
-C:\Programming\WebRepo\WebRepo\WebRepo\bin\Debug\net6.0\WebRepo.App.pdb
 C:\Programming\WebRepo\WebRepo\WebRepo\bin\Debug\net6.0\Microsoft.AspNetCore.Authorization.dll
 C:\Programming\WebRepo\WebRepo\WebRepo\bin\Debug\net6.0\Microsoft.AspNetCore.Metadata.dll
 C:\Programming\WebRepo\WebRepo\WebRepo\bin\Debug\net6.0\Microsoft.AspNetCore.Mvc.Razor.Extensions.dll
 C:\Programming\WebRepo\WebRepo\WebRepo\obj\Debug\net6.0\WebRepo.MvcApplicationPartsAssemblyInfo.cs
+C:\Programming\WebRepo\WebRepo\WebRepo\bin\Debug\net6.0\WebRepo.ASL.dll
+C:\Programming\WebRepo\WebRepo\WebRepo\bin\Debug\net6.0\WebRepo.ASL.pdb

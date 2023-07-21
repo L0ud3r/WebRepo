@@ -22,7 +22,7 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\WebRepo.App\WebRepo.App.csproj" />
+    <ProjectReference Include="..\WebRepo.App\WebRepo.ASL.csproj" />
     <ProjectReference Include="..\WebRepo.DAL\WebRepo.DAL.csproj" />
     <ProjectReference Include="..\WebRepo.Infra\WebRepo.Infra.csproj" />
   </ItemGroup>

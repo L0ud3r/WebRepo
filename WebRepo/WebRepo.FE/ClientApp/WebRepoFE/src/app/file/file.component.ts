@@ -54,8 +54,11 @@ export class FileComponent {
       }
     ]
   }
-  types : any = ["Folder"]
-  typeExists : boolean = false
+  types : any = ["text/plain", "text/html", "image/jpeg", "image/png", "image/gif", "image/bmp",
+  "image/svg+xml", "audio/wav", "audio/mpeg", "audio/x-ms-wma",
+  "application/json", "application/xml", "application/pdf", "application/vnd.openxmlformats-officedocument.wordprocessingml.document", "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet",
+  "application/vnd.ms-powerpoint", "application/vnd.openxmlformats-officedocument.presentationml.presentation", "video/mp4", "video/x-msvideo",
+  "video/quicktime", "video/x-ms-wmv", "video/x-matroska", "video/x-flv"]
 
   contextMenuX : number | null;
   contextMenuY : number | null;
@@ -102,7 +105,6 @@ export class FileComponent {
   }
 
   public dropped(event: any) {
-    console.log(event)
     const formData = new FormData();
     let file: File = event.addedFiles[0];
 
@@ -122,17 +124,16 @@ export class FileComponent {
   }
 
   public fileOver(event:any){
-    console.log(event);
   }
 
   public fileLeave(event:any){
-    console.log(event);
   }
 
   ngOnInit(): void {
     this.getUserFolders(this.currentFolder);
     this.getUserFiles(this.currentFolder);
     document.addEventListener('click', this.hideContextMenu.bind(this));
+    this.setActive();
   }
 
   onFileSelected(event : any) {
@@ -173,7 +174,9 @@ export class FileComponent {
       data =>{
         this.userFiles = data;
         this.userFilesPretty = data;
+        var typeExists = false;
 
+<<<<<<< Updated upstream
         for(let i = 0; i < this.userFilesPretty.length; i++){
           this.typeExists = false
           for(let i = 0; i < this.types.length || this.typeExists; i++){
@@ -183,6 +186,9 @@ export class FileComponent {
           }
 
           if(!this.typeExists) this.types.push(this.userFiles[i].contentType)
+=======
+        for(let i = 0; i < this.userFiles.length; i++){
+>>>>>>> Stashed changes
 
           if (this.userFilesPretty[i].contentType == "text/plain")
             this.userFilesPretty[i].contentType = "Text";
@@ -230,7 +236,12 @@ export class FileComponent {
           else if (this.userFilesPretty[i].contentType == "video/x-flv")
             this.userFilesPretty[i].contentType = "FLV";
           else
+<<<<<<< Updated upstream
             this.userFilesPretty[i].contentType = "Unkown";
+=======
+            this.userFilesPretty[i].contentType = "Unknown";
+
+>>>>>>> Stashed changes
 
           if(Math.round(this.userFilesPretty[i].contentLength * 0.000001) <= 0)
             this.userFilesPretty[i].contentLength = parseInt(Math.round(this.userFilesPretty[i].contentLength * 0.001).toString()) + " KB"
@@ -241,33 +252,33 @@ export class FileComponent {
           if(Math.round(this.userFilesPretty[i].contentLength * 0.000001) <= 0)
             this.userFilesPretty[i].contentLength = parseInt(Math.round(this.userFilesPretty[i].contentLength * 0.001).toString()) + " KB"
 
-          this.postDates.push(this.userFiles[i].createdDate)
+          // this.postDates.push(this.userFiles[i].createdDate)
 
-          const createdDateString = this.userFilesPretty[i].createdDate;
-          const createdDate = new Date(createdDateString);
-          const currentDate = new Date();
-          const diffMilliseconds = currentDate.getTime() - createdDate.getTime();
+          // const createdDateString = this.userFilesPretty[i].createdDate;
+          // const createdDate = new Date(createdDateString);
+          // const currentDate = new Date();
+          // const diffMilliseconds = currentDate.getTime() - createdDate.getTime();
 
-          const diffSeconds = Math.floor(diffMilliseconds / 1000);
-          const diffMinutes = Math.floor(diffSeconds / 60);
-          const diffHours = Math.floor(diffMinutes / 60);
-          const diffDays = Math.floor(diffHours / 24);
-          const diffMonths = Math.floor(diffDays / 30);
-          const diffYears = Math.floor(diffDays / 365);
+          // const diffSeconds = Math.floor(diffMilliseconds / 1000);
+          // const diffMinutes = Math.floor(diffSeconds / 60);
+          // const diffHours = Math.floor(diffMinutes / 60);
+          // const diffDays = Math.floor(diffHours / 24);
+          // const diffMonths = Math.floor(diffDays / 30);
+          // const diffYears = Math.floor(diffDays / 365);
 
-          if (diffYears > 0) {
-            this.userFilesPretty[i].createdDate = `${diffYears} year${diffYears > 1 ? 's' : ''} ago`;
-          } else if (diffMonths > 0) {
-            this.userFilesPretty[i].createdDate = `${diffMonths} month${diffMonths > 1 ? 's' : ''} ago`;
-          } else if (diffDays > 0) {
-            this.userFilesPretty[i].createdDate = `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
-          } else if (diffHours > 0) {
-            this.userFilesPretty[i].createdDate = `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
-          } else if (diffMinutes > 0) {
-            this.userFilesPretty[i].createdDate = `${diffMinutes} minute${diffMinutes > 1 ? 's' : ''} ago`;
-          } else {
-            this.userFilesPretty[i].createdDate = `${diffSeconds} second${diffSeconds > 1 ? 's' : ''} ago`;
-          }
+          // if (diffYears > 0) {
+          //   this.userFilesPretty[i].createdDate = `${diffYears} year${diffYears > 1 ? 's' : ''} ago`;
+          // } else if (diffMonths > 0) {
+          //   this.userFilesPretty[i].createdDate = `${diffMonths} month${diffMonths > 1 ? 's' : ''} ago`;
+          // } else if (diffDays > 0) {
+          //   this.userFilesPretty[i].createdDate = `${diffDays} day${diffDays > 1 ? 's' : ''} ago`;
+          // } else if (diffHours > 0) {
+          //   this.userFilesPretty[i].createdDate = `${diffHours} hour${diffHours > 1 ? 's' : ''} ago`;
+          // } else if (diffMinutes > 0) {
+          //   this.userFilesPretty[i].createdDate = `${diffMinutes} minute${diffMinutes > 1 ? 's' : ''} ago`;
+          // } else {
+          //   this.userFilesPretty[i].createdDate = `${diffSeconds} second${diffSeconds > 1 ? 's' : ''} ago`;
+          // }
         }
     },
       error => {
@@ -286,7 +297,6 @@ export class FileComponent {
     else{
       this.service.paginateFiles(this.modelFiles).subscribe(
         data => {
-          console.log(data)
           this.userFiles = data.rows;
           this.userFilesPretty = data.rows;
 
@@ -422,6 +432,13 @@ export class FileComponent {
     this.service.addRemoveFavourites(id).subscribe(
       data => {
         alert("Success!")
+
+        const menuItems = document.getElementsByClassName('dropdown-menu show');
+
+        // Remove 'active' class from all menu items
+        for (let i = 0; i < menuItems.length; i++) {
+          menuItems[i].classList.remove('show');
+        }
       },
       error => {
         alert("Error!")
@@ -431,7 +448,6 @@ export class FileComponent {
   getCurrentFolder(): number {
     return this.currentFolder;
   }
-
 
   addFolder(currentFolder : number) : void{
     this.dialogReference.open(NewFolderComponent, {data : currentFolder})
@@ -453,6 +469,13 @@ export class FileComponent {
     this.service.deleteRecoverFile(this.edditedFile).subscribe(
       data => {
         alert("File deleted")
+        const menuItems = document.getElementsByClassName('dropdown-menu show');
+
+        // Remove 'active' class from all menu items
+        for (let i = 0; i < menuItems.length; i++) {
+          menuItems[i].classList.remove('show');
+        }
+
         this.getUserFolders(this.currentFolder);
         this.getUserFiles(this.currentFolder);
     },
@@ -462,6 +485,21 @@ export class FileComponent {
         this.getUserFiles(this.currentFolder);
         console.log(error)
     })
+  }
+
+  setActive(): void {
+    const menuItems = document.getElementsByClassName('nav-link');
+
+    // Remove 'active' class from all menu items
+    for (let i = 0; i < menuItems.length; i++) {
+      menuItems[i].classList.remove('active');
+    }
+
+    // Add 'active' class to the clicked menu item
+    const clickedItem = document.getElementById("side-doc");
+    if (clickedItem) {
+      clickedItem.classList.add('active');
+    }
   }
 
   message(message : string) : void{
