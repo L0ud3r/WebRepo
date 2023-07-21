@@ -18,5 +18,6 @@ namespace WebRepo.App.Interfaces
         Task<bool> AddRemoveFavourites(int id);
         Task<List<FileBlob>> GetDeletedFiles(string userEmail);
         IEnumerable<FileBlob> GetByFavouritesEnum(string userEmail);
+        Task<FileBlob> DeleteFile(int fileId);
     }
 }

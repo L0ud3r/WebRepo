@@ -208,5 +208,18 @@ namespace WebRepo.App.Services
         {
             return _filesRepository.Get().Where(x => x.Active == false && x.User.Email == userEmail).ToList();
         }
+
+        public async Task<FileBlob> DeleteFile(int fileId)
+        {
+            var file = await _filesRepository.Get().Where(x => x.Id == fileId).SingleOrDefaultAsync();
+
+            if (_filesRepository.Exists(fileId) == false)
+                return null;
+
+            _filesRepository.Delete(fileId);
+            _filesRepository.Save();
+
+            return file;
+        }
     }
 }

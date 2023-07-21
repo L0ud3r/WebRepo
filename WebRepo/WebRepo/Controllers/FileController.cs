@@ -481,5 +481,23 @@ namespace WebRepo.Controllers
 
             return new JsonResult(edittedFile);
         }
+
+        [HttpPatch("removefilerepo")]
+        public async Task<IActionResult> DeleteFile([FromBody] FileViewModel file)
+        {
+            string userEmail = "";
+
+            if (User.Identity.IsAuthenticated)
+                userEmail = User.Claims.FirstOrDefault(c => c.Type == ClaimTypes.Email).Value;
+            else
+                return new JsonResult(false) { StatusCode = 401, Value = "User not authenticated" };
+
+            var removedFile = await _fileService.DeleteFile(file.Id);
+
+            if (removedFile == null)
+                return new JsonResult(true) { StatusCode = 404, Value = "Couldn't delete file" };
+
+            return new JsonResult(removedFile);
+        }
     }
 }

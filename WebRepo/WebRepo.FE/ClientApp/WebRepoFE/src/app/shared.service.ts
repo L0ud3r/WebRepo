@@ -62,6 +62,11 @@ export class SharedService {
     return this.http.patch<any>(this.APIUrl+'/File', file, { headers: { Authorization: this.token} });
   }
 
+  deleteFile(file : any):Observable<any>{
+    return this.http.patch<any>(this.APIUrl+'/File/removefilerepo', file, { headers: { Authorization: this.token} });
+  }
+
+
   deleteRecoverFile(file : any):Observable<any>{
     return this.http.patch<any>(this.APIUrl+'/File/removerecover', file, { headers: { Authorization: this.token} });
   }

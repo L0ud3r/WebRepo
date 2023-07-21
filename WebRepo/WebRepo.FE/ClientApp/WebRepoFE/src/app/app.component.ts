@@ -16,7 +16,6 @@ export class AppComponent {
   title = 'WebRepoFE';
   isLoginLayout : boolean = false;
   account : any = {}
-
   constructor(private router: Router, private service : SharedService,
      private folderService : FolderNavigationService,
      @Inject(FileComponent) public fileComponent : FileComponent,
@@ -25,7 +24,9 @@ export class AppComponent {
 
    }
 
+
   ngOnInit(){
+    var i = 0;
     this.checkLayout();
     if(this.isLoginLayout == false)
       this.userInfo();
@@ -55,4 +56,6 @@ export class AppComponent {
   addFolder() : void{
     this.fileComponent.addFolder(this.folderService.currentFolder);
   }
+
+  
 }

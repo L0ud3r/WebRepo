@@ -11,7 +11,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebRepo.DAL", "WebRepo.DAL\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebRepo.Infra", "WebRepo.Infra\WebRepo.Infra.csproj", "{953E0969-CD8A-49AA-AA55-E4EA65345654}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebRepo.App", "WebRepo.App\WebRepo.App.csproj", "{7A6FE49C-E72C-4189-BB2F-6143607A2623}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "WebRepo.ASL", "WebRepo.App\WebRepo.ASL.csproj", "{7A6FE49C-E72C-4189-BB2F-6143607A2623}"
 	ProjectSection(ProjectDependencies) = postProject
 		{953E0969-CD8A-49AA-AA55-E4EA65345654} = {953E0969-CD8A-49AA-AA55-E4EA65345654}
 	EndProjectSection

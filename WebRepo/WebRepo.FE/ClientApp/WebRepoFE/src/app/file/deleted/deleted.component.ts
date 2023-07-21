@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
 import { SharedService } from 'src/app/shared.service';
-import { DetailsComponent } from '../details/details.component';
 import { MatDialog } from '@angular/material/dialog';
+import { DetailsComponent } from '../details/details.component';
+import { EditFileNameComponent } from '../edit-file-name/edit-file-name.component';
 
 @Component({
   selector: 'app-deleted',
@@ -19,7 +20,8 @@ export class DeletedComponent {
   constructor(private service : SharedService, private dialogReference : MatDialog) { }
 
   ngOnInit(): void {
-    this.getDeletedFiles()
+    this.getDeletedFiles();
+    this.setActive();
   }
 
   openModal(file:any){
@@ -29,7 +31,7 @@ export class DeletedComponent {
       }
     }
   }
-  
+
   recoverFile(file : any) : void {
 
     this.file.id = file.id
@@ -48,21 +50,7 @@ export class DeletedComponent {
   }
 
   changeFilename(file : any) : void {
-    file.fileName = 'PowerPoint Eddited'
-
-    this.file.id = file.id
-    this.file.fileName = file.fileName
-
-    this.service.patchFile(this.file).subscribe(
-      data => {
-        alert("File renamed!")
-        this.getDeletedFiles();
-    },
-      error=>{
-        alert("Error on changing filename")
-        this.getDeletedFiles();
-        console.log(error)
-    })
+    this.dialogReference.open(EditFileNameComponent, {data : file.id})
   }
 
   getDeletedFiles() : void {
@@ -72,18 +60,51 @@ export class DeletedComponent {
         this.userFilesPretty = data;
 
         for(let i = 0; i < this.userFilesPretty.length; i++){
-          if(this.userFilesPretty[i].contentType == "application/vnd.openxmlformats-officedocument.presentationml.presentation")
+          if (this.userFilesPretty[i].contentType == "text/plain")
+            this.userFilesPretty[i].contentType = "Text";
+          else if (this.userFilesPretty[i].contentType == "text/html")
+            this.userFilesPretty[i].contentType = "HTML";
+          else if (this.userFilesPretty[i].contentType == "image/jpg" || this.userFilesPretty[i].contentType == "image/jpeg")
+            this.userFilesPretty[i].contentType = "JPEG";
+          else if (this.userFilesPretty[i].contentType == "image/png")
+            this.userFilesPretty[i].contentType = "PNG";
+          else if (this.userFilesPretty[i].contentType == "image/gif")
+            this.userFilesPretty[i].contentType = "GIF";
+          else if (this.userFilesPretty[i].contentType == "image/bmp")
+            this.userFilesPretty[i].contentType = "BMP";
+          else if (this.userFilesPretty[i].contentType == "image/svg+xml")
+            this.userFilesPretty[i].contentType = "SVG";
+          else if (this.userFilesPretty[i].contentType == "audio/wav" || this.userFilesPretty[i].contentType == "audio/x-wav")
+            this.userFilesPretty[i].contentType = "WAV";
+          else if (this.userFilesPretty[i].contentType == "audio/mpeg")
+            this.userFilesPretty[i].contentType = "MP3";
+          else if (this.userFilesPretty[i].contentType == "audio/x-ms-wma")
+            this.userFilesPretty[i].contentType = "WMA";
+          else if (this.userFilesPretty[i].contentType == "application/json")
+            this.userFilesPretty[i].contentType = "JSON";
+          else if (this.userFilesPretty[i].contentType == "application/xml")
+            this.userFilesPretty[i].contentType = "XML";
+          else if (this.userFilesPretty[i].contentType == "application/pdf")
+            this.userFilesPretty[i].contentType = "PDF";
+          else if (this.userFilesPretty[i].contentType == "application/vnd.openxmlformats-officedocument.wordprocessingml.document")
+            this.userFilesPretty[i].contentType = "Word";
+          else if (this.userFilesPretty[i].contentType == "application/vnd.openxmlformats-officedocument.spreadsheetml.sheet")
+            this.userFilesPretty[i].contentType = "Open XML";
+          else if (this.userFilesPretty[i].contentType == "application/vnd.ms-powerpoint"
+          || this.userFilesPretty[i].contentType == "application/vnd.openxmlformats-officedocument.presentationml.presentation")
             this.userFilesPretty[i].contentType = "PowerPoint"
-            else if(this.userFilesPretty[i].contentType == "image/jpg")
-            this.userFilesPretty[i].contentType = "JPG"
-          else if(this.userFilesPretty[i].contentType == "image/jpeg")
-            this.userFilesPretty[i].contentType = "JPEG"
-          else if(this.userFilesPretty[i].contentType == "image/png")
-            this.userFilesPretty[i].contentType = "PNG"
-          else if(this.userFilesPretty[i].contentType == "application/pdf")
-            this.userFilesPretty[i].contentType = "PDF"
-          else if(this.userFilesPretty[i].contentType == "plain/text")
-            this.userFilesPretty[i].contentType = "Text"
+          else if (this.userFilesPretty[i].contentType == "video/mp4")
+            this.userFilesPretty[i].contentType = "MP4";
+          else if (this.userFilesPretty[i].contentType == "video/x-msvideo")
+            this.userFilesPretty[i].contentType = "AVI";
+          else if (this.userFilesPretty[i].contentType == "video/quicktime")
+            this.userFilesPretty[i].contentType = "MOV";
+          else if (this.userFilesPretty[i].contentType == "video/x-ms-wmv")
+            this.userFilesPretty[i].contentType = "WMV";
+          else if (this.userFilesPretty[i].contentType == "video/x-matroska")
+            this.userFilesPretty[i].contentType = "MKV";
+          else if (this.userFilesPretty[i].contentType == "video/x-flv")
+            this.userFilesPretty[i].contentType = "FLV";
 
           this.userFilesPretty[i].contentLength = parseInt(Math.round(this.userFilesPretty[i].contentLength / 1000).toString())
 
@@ -121,5 +142,36 @@ export class DeletedComponent {
         console.log(error)
         this.userFilesPretty = null;
     })
+  }
+
+  deleteFile(file : any) : void {
+    this.file.id = file.id
+    this.file.fileName = file.fileName
+
+    this.service.deleteRecoverFile(this.file).subscribe(
+      data => {
+        alert("File deleted")
+        this.getDeletedFiles();
+    },
+      error => {
+        alert("Error on deleting file")
+        this.getDeletedFiles();
+        console.log(error)
+    })
+  }
+
+  setActive(): void {
+    const menuItems = document.getElementsByClassName('nav-link');
+
+    // Remove 'active' class from all menu items
+    for (let i = 0; i < menuItems.length; i++) {
+      menuItems[i].classList.remove('active');
+    }
+
+    // Add 'active' class to the clicked menu item
+    const clickedItem = document.getElementById("side-del");
+    if (clickedItem) {
+      clickedItem.classList.add('active');
+    }
   }
 }
